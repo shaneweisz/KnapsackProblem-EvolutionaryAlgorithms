@@ -1,4 +1,4 @@
-public class Chromosome {
+public class Chromosome implements Comparable<Chromosome> {
     private final int[] gene;
     private final int fitness;
 
@@ -7,6 +7,7 @@ public class Chromosome {
         fitness = calculateFitness(gene);
     }
 
+    /** Generates a random Chromosome for the initial population */
     protected static Chromosome generateRandom() {
         int[] gene = new int[150];
         for (int i = 0; i < 150; i++) {
@@ -15,6 +16,7 @@ public class Chromosome {
         return new Chromosome(gene);
     }
 
+    /** Gets the total weight of the knapsack items encoded in a given gene array */
     private static int getTotalWeight(int[] gene) {
         int sum = 0;
         for (int i = 0; i < gene.length; i++) {
@@ -25,6 +27,7 @@ public class Chromosome {
         return sum;
     }
 
+    /** Gets the total value of the knapsack items encoded in a given gene array */
     private static int getTotalValue(int[] gene) {
         int sum = 0;
         for (int i = 0; i < gene.length; i++) {
@@ -35,11 +38,14 @@ public class Chromosome {
         return sum;
     }
 
+    /** Calculates the fitness of a particular gene */
     private static int calculateFitness(int[] gene) {
         int weight = getTotalWeight(gene);
+        // If the knapsack is above the maximum capacity, assign a zero fitness
         if (weight > Configuration.instance.maximumCapacity) {
             return 0;
         }
+        // Else the fitness is the value of the gene
         return getTotalValue(gene);
     }
 
@@ -51,12 +57,23 @@ public class Chromosome {
         return fitness;
     }
 
+    /** Returns the chromosome as a string e.g. "0101110...1110" */
     public String toString() {
         String s = "";
         for (int i = 0; i < gene.length; i++) {
             s += gene[i];
         }
         return s;
+    }
+
+    public int compareTo(Chromosome c) {
+        if (this.fitness < c.getFitness()) {
+            return -1;
+        } else if (this.fitness > c.getFitness()) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     public static void main(String[] args) {

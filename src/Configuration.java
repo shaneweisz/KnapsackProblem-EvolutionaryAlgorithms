@@ -5,8 +5,14 @@ public enum Configuration {
 
     int populationSize = 2500;
     int maximumNumberOfGenerations = 10000;
+    int maximumCapacity = 822;
 
     double crossoverRatio = 0.7;
     double elitismRatio = 0.1;
     double mutationRatio = 0.00005;
+    String selectionMethod = "RWS";
+
+    KnapsackInstance knapsackItems = new KnapsackInstance(); // Stores the possible knapsack items with their weights
+                                                             // and values
+
 }

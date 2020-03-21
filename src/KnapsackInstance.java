@@ -7,9 +7,9 @@ import java.util.Scanner;
  * object in memory.
  */
 public class KnapsackInstance {
-    public static final String DATA_PATH = "/Users/shaneweisz/Documents/UCT/Honours/Evolutionary Computing/Assignment/data/knapsack_instance.csv";
-    private static final int[] weights = new int[150];
-    private static final int[] values = new int[150];
+    private final static String DATA_PATH = "/Users/shaneweisz/Documents/UCT/Honours/Evolutionary Computing/Assignment/data/knapsack_instance.csv";
+    private final static int[] weights = new int[150];
+    private final static int[] values = new int[150];
 
     public KnapsackInstance() {
         try {
@@ -18,7 +18,6 @@ public class KnapsackInstance {
             for (int i = 0; i < 150; i++) // loop through the 150 lines in the csv file
             {
                 String line = scFile.nextLine();
-                System.out.println(line);
                 Scanner scLine = new Scanner(line);
                 scLine.useDelimiter(";");
                 scLine.nextInt(); // skip the index
