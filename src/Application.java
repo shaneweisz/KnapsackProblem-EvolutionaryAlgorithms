@@ -33,6 +33,39 @@ public class Application {
                             mutationMethod, mutationRatio);
 
                     scFile.close();
+                } else if (algo.equals("sa")) {
+                    String fileName = SA_PATH + configuration + ".json";
+                    Scanner scFile = new Scanner(new File(fileName));
+                    scFile.useDelimiter(",");
+
+                    int initialTemperature = Integer.parseInt(getJSONValueFromLine(scFile.next()));
+                    scFile.next(); // Skip the configuration since we already know it
+                    double coolingRate = Double.parseDouble(getJSONValueFromLine(scFile.next()));
+                    System.out.println(initialTemperature);
+                    System.out.println(coolingRate);
+                    // SimulatedAnnealing.run(configuration, initialTemperature, coolingRate);
+                } else if (algo.equals("pso")) {
+                    String fileName = PSO_PATH + configuration + ".json";
+                    Scanner scFile = new Scanner(new File(fileName));
+                    scFile.useDelimiter(",");
+
+                    int minVelocity = Integer.parseInt(getJSONValueFromLine(scFile.next()));
+                    int maxVelocity = Integer.parseInt(getJSONValueFromLine(scFile.next()));
+                    double inertia = Double.parseDouble(getJSONValueFromLine(scFile.next()));
+                    scFile.next(); // Skip the configuration since we already know it
+                    int numParticles = Integer.parseInt(getJSONValueFromLine(scFile.next()));
+                    double c1 = Double.parseDouble(getJSONValueFromLine(scFile.next()));
+                    double c2 = Double.parseDouble(getJSONValueFromLine(scFile.next()));
+                    System.out.println(minVelocity);
+                    System.out.println(maxVelocity);
+                    System.out.println(inertia);
+                    System.out.println(numParticles);
+                    System.out.println(c1);
+                    System.out.println(c2);
+                    // ParticleSwarmOptimization.run(configuration, numParticles, minVelocity,
+                    // maxVelocity, c1, c2, inertia);
+                } else {
+                    // The algorithm must be one of the above 3 options so will not get here
                 }
 
             } catch (FileNotFoundException e) {
@@ -55,6 +88,6 @@ public class Application {
         scLine.next(); // Skip the key
         String value = scLine.next();
         scLine.close();
-        return value.substring(1, value.lastIndexOf("\""));
+        return value.substring(value.indexOf("\"") + 1, value.lastIndexOf("\""));
     }
 }
