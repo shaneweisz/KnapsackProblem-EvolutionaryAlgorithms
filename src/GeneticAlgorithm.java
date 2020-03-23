@@ -1,32 +1,20 @@
 public class GeneticAlgorithm {
-    public static void main(String[] args) {
-        double currentBestFitness = 0;
+    private final static int POPULATION_SIZE = 250;
+    private final static double ELITISM_RATIO = 0.1;
 
-        int populationSize = 1000;
-        String crossoverMethod = "1PX";
-        double crossoverRatio = 0.7;
-        double elitismRatio = 0.1;
-        String mutationMethod = "BFM";
-        double mutationRatio = 0.003;
-        String selectionMethod = "RWS";
+    public static void run(String selectionMethod, String crossoverMethod, double crossoverRatio, String mutationMethod,
+            double mutationRatio) {
 
-        Population population = new Population(populationSize, selectionMethod, crossoverMethod, crossoverRatio,
-                mutationMethod, mutationRatio, elitismRatio);
-
-        int generation = 1;
+        // Create initial population
+        Population population = new Population(POPULATION_SIZE, selectionMethod, crossoverMethod, crossoverRatio,
+                mutationMethod, mutationRatio, ELITISM_RATIO);
         Chromosome bestChromosome = population.getPopulation()[0];
+        double currentBestFitness = bestChromosome.getFitness();
+        int generation = 1;
 
-        // System.out.println("Population " + i);
-        // System.out.println("------------------------");
-        // System.out.println(population);
-        // System.out.println("------------------------");
-
-        while ((++generation <= ProblemConfiguration.instance.maximumNumberOfGenerations)) {
+        // Iterate through generations
+        while ((++generation) <= ProblemConfiguration.instance.maximumNumberOfGenerations) {
             population.evolve();
-            // System.out.println("Population " + i);
-            // System.out.println("------------------------");
-            // System.out.println(population);
-            // System.out.println("------------------------");
             bestChromosome = population.getPopulation()[0];
             if (bestChromosome.getFitness() > currentBestFitness) {
                 currentBestFitness = bestChromosome.getFitness();
@@ -35,7 +23,9 @@ public class GeneticAlgorithm {
                         + ", Knapsack = " + bestChromosome);
             }
         }
+        generation--; // We stopped before evolving the next generation
 
+        // Output final best solution
         System.out.println("Generation : " + ProblemConfiguration.instance.decimalFormat.format(generation) + " : "
                 + bestChromosome.getTotalValue());
         System.out.println("numberOfCrossoverOperations : " + population.getNumberOfCrossoverOperations());

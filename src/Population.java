@@ -177,8 +177,8 @@ public class Population {
     public String toString() {
         String s = "";
         for (int i = 0; i < population.length; i++) {
-            s += String.format("#%d: Weight = %d, Value = %d", (i + 1), population[i].getTotalWeight(),
-                    population[i].getTotalValue()) + "\n";
+            s += String.format("Weight = %d, Value = %d", population[i].getTotalWeight(), population[i].getTotalValue())
+                    + "\n";
         }
         return s;
     }

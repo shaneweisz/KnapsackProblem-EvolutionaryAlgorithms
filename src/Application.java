@@ -18,6 +18,12 @@ public class Application {
         }
         if (configuration != null) {
             //
+            String crossoverMethod = "1PX";
+            double crossoverRatio = 0.7;
+            String mutationMethod = "BFM";
+            double mutationRatio = 0.003;
+            String selectionMethod = "RWS";
+            GeneticAlgorithm.run(selectionMethod, crossoverMethod, crossoverRatio, mutationMethod, mutationRatio);
         }
     }
 }

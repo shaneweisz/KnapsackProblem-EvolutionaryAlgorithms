@@ -16,7 +16,7 @@ SRC_FILES=$(SRC:%.java=$(SRCDIR)/%.java)
 default: $(CLASS_FILES)
 
 run:
-	java -cp $(BINDIR) GeneticAlgorithm
+	java -cp $(BINDIR) Application -configuration x
 
 runC:
 	java -cp $(BINDIR) Chromosome
