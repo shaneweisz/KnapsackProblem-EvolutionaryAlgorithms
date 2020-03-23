@@ -11,13 +11,13 @@ public class Chromosome implements Comparable<Chromosome> {
     protected static Chromosome generateRandom() {
         int[] gene = new int[150];
         int total_weight = 0;
-        while (total_weight < Configuration.instance.maximumCapacity) {
-            int random_item = Configuration.instance.randomGenerator.nextInt(150);
+        while (total_weight < ProblemConfiguration.instance.maximumCapacity) {
+            int random_item = ProblemConfiguration.instance.randomGenerator.nextInt(150);
             if (gene[random_item] == 1) {
                 continue; // i.e. if the item is already in the knapsack, pick another one.
             }
-            int weight = Configuration.instance.knapsackItems.getWeight(random_item);
-            if (total_weight + weight > Configuration.instance.maximumCapacity) {
+            int weight = ProblemConfiguration.instance.knapsackItems.getWeight(random_item);
+            if (total_weight + weight > ProblemConfiguration.instance.maximumCapacity) {
                 break;
             }
             gene[random_item] = 1;
@@ -32,7 +32,7 @@ public class Chromosome implements Comparable<Chromosome> {
         for (int i = 0; i < gene.length; i++) {
             // gene[i] is either 1 or 0 depending on whether the item is in the knapsack or
             // not - hence, we only add its weight if gene[i] == 1
-            sum += gene[i] * Configuration.instance.knapsackItems.getWeight(i);
+            sum += gene[i] * ProblemConfiguration.instance.knapsackItems.getWeight(i);
         }
         return sum;
     }
@@ -43,7 +43,7 @@ public class Chromosome implements Comparable<Chromosome> {
         for (int i = 0; i < gene.length; i++) {
             // gene[i] is either 1 or 0 depending on whether the item is in the knapsack or
             // not - hence, we only add its weight if gene[i] == 1
-            sum += gene[i] * Configuration.instance.knapsackItems.getWeight(i);
+            sum += gene[i] * ProblemConfiguration.instance.knapsackItems.getWeight(i);
         }
         return sum;
     }
@@ -56,7 +56,7 @@ public class Chromosome implements Comparable<Chromosome> {
         for (int i = 0; i < gene.length; i++) {
             // gene[i] is either 1 or 0 depending on whether the item is in the knapsack or
             // not - hence, we only add its value if gene[i] == 1
-            sum += gene[i] * Configuration.instance.knapsackItems.getValue(i);
+            sum += gene[i] * ProblemConfiguration.instance.knapsackItems.getValue(i);
         }
         return sum;
     }
@@ -69,7 +69,7 @@ public class Chromosome implements Comparable<Chromosome> {
         for (int i = 0; i < gene.length; i++) {
             // gene[i] is either 1 or 0 depending on whether the item is in the knapsack or
             // not - hence, we only add its value if gene[i] == 1
-            sum += gene[i] * Configuration.instance.knapsackItems.getValue(i);
+            sum += gene[i] * ProblemConfiguration.instance.knapsackItems.getValue(i);
         }
         return sum;
     }
@@ -77,7 +77,7 @@ public class Chromosome implements Comparable<Chromosome> {
     private static boolean isValid(int[] gene) {
         int weight = getTotalWeight(gene);
         // If the knapsack is above the maximum capacity, it is not valid
-        if (weight > Configuration.instance.maximumCapacity) {
+        if (weight > ProblemConfiguration.instance.maximumCapacity) {
             return false;
         }
         return true;
@@ -85,9 +85,9 @@ public class Chromosome implements Comparable<Chromosome> {
 
     /** Calculates the fitness of a particular gene */
     private static int calculateFitness(int[] gene) {
-        if (!isValid(gene)) {
+        if (!isValid(gene)) { // Assign a zero fitness if the knapsack is overweight
             return 0;
-        }
+        } // Otherwise, the fitness is the value of the knapsack
         return getTotalValue(gene);
     }
 
@@ -99,25 +99,28 @@ public class Chromosome implements Comparable<Chromosome> {
         return fitness;
     }
 
-    public Chromosome[] doCrossover(Chromosome c) {
-        int pivot = Configuration.instance.randomGenerator.nextInt(this.gene.length);
-        int[] child1 = new int[this.gene.length];
-        int[] child2 = new int[this.gene.length];
-        System.arraycopy(this.gene, 0, child1, 0, pivot);
-        System.arraycopy(c.gene, pivot, child1, pivot, child1.length - pivot);
-        System.arraycopy(c.gene, 0, child2, 0, pivot);
-        System.arraycopy(this.gene, pivot, child2, pivot, child2.length - pivot);
-        Chromosome[] children = new Chromosome[2];
-        children[0] = new Chromosome(child1);
-        children[1] = new Chromosome(child2);
-        return children;
+    public Chromosome[] doCrossover(String method, Chromosome c) {
+        if (method.equals("1PX")) {
+            int pivot = ProblemConfiguration.instance.randomGenerator.nextInt(this.gene.length);
+            int[] child1 = new int[this.gene.length];
+            int[] child2 = new int[this.gene.length];
+            System.arraycopy(this.gene, 0, child1, 0, pivot);
+            System.arraycopy(c.gene, pivot, child1, pivot, child1.length - pivot);
+            System.arraycopy(c.gene, 0, child2, 0, pivot);
+            System.arraycopy(this.gene, pivot, child2, pivot, child2.length - pivot);
+            Chromosome[] children = new Chromosome[2];
+            children[0] = new Chromosome(child1);
+            children[1] = new Chromosome(child2);
+            return children;
+        }
+        return null;
     }
 
     public Chromosome doMutation(String method) {
         if (method.equals("BFM")) {
             int[] newGene = new int[this.gene.length];
             System.arraycopy(this.gene, 0, newGene, 0, this.gene.length);
-            int randomItem = Configuration.instance.randomGenerator.nextInt(this.gene.length);
+            int randomItem = ProblemConfiguration.instance.randomGenerator.nextInt(this.gene.length);
             newGene[randomItem] = newGene[randomItem] == 1 ? 0 : 1;
             return new Chromosome(newGene);
         }
@@ -156,7 +159,7 @@ public class Chromosome implements Comparable<Chromosome> {
         Chromosome c1 = new Chromosome(parent1);
         Chromosome c2 = new Chromosome(parent2);
         System.out.println("Before crossover: " + c1 + " " + c2);
-        Chromosome[] children = c1.doCrossover(c2);
+        Chromosome[] children = c1.doCrossover("1PX", c2);
         System.out.println("After crossover: " + children[0] + " " + children[1]);
     }
 }

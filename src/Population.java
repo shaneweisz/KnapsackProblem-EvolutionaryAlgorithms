@@ -3,22 +3,27 @@ import java.util.Collections;
 
 public class Population {
     private double elitismRatio;
-    private double mutationRatio;
-    private double crossoverRatio;
     private String selectionMethod;
+    private String crossoverMethod;
+    private double crossoverRatio;
+    private String mutationMethod;
+    private double mutationRatio;
+
     private Chromosome[] population;
     private int numberOfCrossoverOperations = 0;
     private int numberOfMutationOperations = 0;
 
-    public Population(int size, double crossoverRatio, double elitismRatio, double mutationRatio,
-            String selectionMethod) {
-        this.crossoverRatio = crossoverRatio;
-        this.elitismRatio = elitismRatio;
-        this.mutationRatio = mutationRatio;
+    public Population(int size, String selectionMethod, String crossoverMethod, double crossoverRatio,
+            String mutationMethod, double mutationRatio, double elitismRatio) {
         this.selectionMethod = selectionMethod;
-        population = new Chromosome[size];
+        this.crossoverMethod = crossoverMethod;
+        this.crossoverRatio = crossoverRatio;
+        this.mutationMethod = mutationMethod;
+        this.mutationRatio = mutationRatio;
+        this.elitismRatio = elitismRatio;
 
         // Randomly generate the initial population
+        population = new Chromosome[size];
         for (int i = 0; i < size; i++) {
             population[i] = Chromosome.generateRandom();
         }
@@ -44,10 +49,17 @@ public class Population {
 
     public void evolve() {
         Chromosome[] chromosomeArray = new Chromosome[population.length];
+
+        // Keep the elite in the new chromosome array for the next generation
         int index = (int) Math.round(population.length * elitismRatio);
-        // Keep the elite in the new chromosome array
         System.arraycopy(population, 0, chromosomeArray, 0, index);
-        double[] rouletteWheel = createRouletteWheel();
+
+        double[] rouletteWheel = null;
+        // Compute the roulette wheel for the population, in advance,
+        // if the method is RWS
+        if (this.selectionMethod.equals("RWS")) {
+            rouletteWheel = createRouletteWheel();
+        }
 
         // PRINT ROULETTE WHEEL
         // for (int i = 0; i < rouletteWheel.length; i++) {
@@ -55,28 +67,33 @@ public class Population {
         // }
 
         while (index < chromosomeArray.length) {
-            if (Configuration.instance.randomGenerator.nextFloat() <= crossoverRatio) {
-                Chromosome[] parents = selectParents(rouletteWheel);
-                Chromosome[] children = parents[0].doCrossover(parents[1]);
+            if (ProblemConfiguration.instance.randomGenerator.nextFloat() <= crossoverRatio) {
+                Chromosome[] parents = new Chromosome[2];
+                if (this.selectionMethod.equals("RWS")) {
+                    parents = selectParentsRWS(rouletteWheel);
+                } else if (this.selectionMethod.equals("TS")) {
+                    parents = selectParentsTS();
+                }
+                Chromosome[] children = parents[0].doCrossover(this.crossoverMethod, parents[1]);
                 numberOfCrossoverOperations++;
 
-                if (Configuration.instance.randomGenerator.nextFloat() <= mutationRatio) {
-                    chromosomeArray[index] = children[0].doMutation("BFM");
+                if (ProblemConfiguration.instance.randomGenerator.nextFloat() <= mutationRatio) {
+                    chromosomeArray[index] = children[0].doMutation(this.mutationMethod);
                     numberOfMutationOperations++;
                 } else {
                     chromosomeArray[index] = children[0];
                 }
                 index++;
                 if (index < chromosomeArray.length) {
-                    if (Configuration.instance.randomGenerator.nextFloat() <= mutationRatio) {
+                    if (ProblemConfiguration.instance.randomGenerator.nextFloat() <= mutationRatio) {
                         chromosomeArray[index] = children[1].doMutation("BFM");
                         numberOfMutationOperations++;
                     } else {
                         chromosomeArray[index] = children[1];
                     }
                 }
-            } else if (Configuration.instance.randomGenerator.nextFloat() <= mutationRatio) {
-                chromosomeArray[index] = population[index].doMutation("BFM");
+            } else if (ProblemConfiguration.instance.randomGenerator.nextFloat() <= mutationRatio) {
+                chromosomeArray[index] = population[index].doMutation(this.mutationMethod);
                 numberOfMutationOperations++;
             } else {
                 chromosomeArray[index] = population[index];
@@ -120,9 +137,10 @@ public class Population {
 
     /**
      * Picks a parent according to the probabilities in the specified roulette wheel
+     * Note: the roulette wheel sections are disjoint
      */
     private Chromosome spinRouletteWheel(double[] rouletteWheel) {
-        double selectionPoint = Configuration.instance.randomGenerator.nextFloat();
+        double selectionPoint = ProblemConfiguration.instance.randomGenerator.nextFloat();
         for (int i = 0; i < rouletteWheel.length; i++) {
             if (selectionPoint < rouletteWheel[i]) {
                 return population[i];
@@ -134,9 +152,10 @@ public class Population {
     }
 
     /**
-     * Selects the two parent Chromosomes to be used for reproduction
+     * Selects the two parent Chromosomes to be used for reproduction using Roulette
+     * Wheel Selection
      */
-    private Chromosome[] selectParents(double[] rouletteWheel) {
+    private Chromosome[] selectParentsRWS(double[] rouletteWheel) {
         Chromosome[] parentArray = new Chromosome[2];
         // Choose two parents using Roulette Wheel Selection
         for (int i = 0; i < 2; i++) {
@@ -146,11 +165,20 @@ public class Population {
         return parentArray;
     }
 
+    /**
+     * Selects the two parent Chromosomes to be used for reproduction using
+     * Tournament Selection
+     */
+    private Chromosome[] selectParentsTS() {
+        Chromosome[] parentArray = new Chromosome[2];
+        return parentArray;
+    }
+
     public String toString() {
         String s = "";
         for (int i = 0; i < population.length; i++) {
-            s += String.format("Weight = %d, Value = %d", population[i].getTotalWeight(), population[i].getTotalValue())
-                    + "\n";
+            s += String.format("#%d: Weight = %d, Value = %d", (i + 1), population[i].getTotalWeight(),
+                    population[i].getTotalValue()) + "\n";
         }
         return s;
     }
