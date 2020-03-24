@@ -2,10 +2,8 @@ public class GeneticAlgorithm {
     private final static int POPULATION_SIZE = 250;
     private final static double ELITISM_RATIO = 0.1;
 
-    public static void run(String configuration, String selectionMethod, String crossoverMethod, double crossoverRatio,
+    public static int run(String configuration, String selectionMethod, String crossoverMethod, double crossoverRatio,
             String mutationMethod, double mutationRatio) {
-
-        System.out.println("Configuration: " + configuration);
 
         // Create initial population
         Population population = new Population(POPULATION_SIZE, selectionMethod, crossoverMethod, crossoverRatio,
@@ -30,11 +28,13 @@ public class GeneticAlgorithm {
         generation--; // We stopped before evolving the next generation
 
         // Output final best solution
-        System.out.println("Generation " + ProblemConfiguration.instance.decimalFormat.format(generation) + " : "
-                + bestChromosome.getTotalValue());
+        int maxValue = bestChromosome.getTotalValue()
+        System.out.println("Configuration " + configuration + ": " + ProblemConfiguration.instance.decimalFormat.format(generation) + " : "
+                + maxValue);
         // System.out.println("numberOfCrossoverOperations : " +
         // population.getNumberOfCrossoverOperations());
         // System.out.println("numberOfMutationOperations : " +
         // population.getNumberOfMutationOperations());
+        return maxValue;
     }
 }

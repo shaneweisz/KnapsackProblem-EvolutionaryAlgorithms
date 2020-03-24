@@ -27,38 +27,58 @@ public class Application {
             // Options: ga, sa and pso
             String method = args[1];
             DecimalFormat decimalFormat = new DecimalFormat("00");
+            int maxValue = 0;
+            String bestConfiguration = "";
             if (method.equalsIgnoreCase("ga")) {
                 for (int i = 1; i <= NUM_GA_CONFIGS; i++) {
                     String configuration = "ga_default_" + decimalFormat.format(i);
-                    runGA(configuration);
+                    int value = runGA(configuration);
+                    if (value > maxValue) {
+                        maxValue = value;
+                        bestConfiguration = configuration;
+                    }
+                    System.out.println("Best configuration is " + bestConfiguration + ": ");
+                    // writeToJSON();
                 }
             } else if (method.equalsIgnoreCase("sa")) {
                 for (int i = 1; i <= NUM_SA_CONFIGS; i++) {
                     String configuration = "sa_default_" + decimalFormat.format(i);
-                    runSA(configuration);
+                    int value = runSA(configuration);
+                    if (value > maxValue) {
+                        maxValue = value;
+                        bestConfiguration = configuration;
+                    }
+                    System.out.println("Best configuration is " + bestConfiguration + ": ");
+                    // writeToJSON();
                 }
             } else if (method.equalsIgnoreCase("pso")) {
                 for (int i = 1; i <= NUM_PSO_CONFIGS; i++) {
                     String configuration = "pso_default_" + decimalFormat.format(i);
-                    runPSO(configuration);
+                    int value = runPSO(configuration);
+                    if (value > maxValue) {
+                        maxValue = value;
+                        bestConfiguration = configuration;
+                    }
+                    System.out.println("Best configuration is " + bestConfiguration + ": ");
+                    // writeToJSON();
                 }
             }
         }
-
     }
 
-    private static void runAlgorithm(String configuration) {
+    private static int runAlgorithm(String configuration) {
         String algo = configuration.substring(0, configuration.indexOf("_"));
         if (algo.equalsIgnoreCase("ga")) {
-            runGA(configuration);
+            return runGA(configuration);
         } else if (algo.equalsIgnoreCase("sa")) {
-            runSA(configuration);
+            return runSA(configuration);
         } else if (algo.equalsIgnoreCase("pso")) {
-            runPSO(configuration);
+            return runPSO(configuration);
         }
+        return -1;
     }
 
-    private static void runGA(String configuration) {
+    private static int runGA(String configuration) {
         try {
             String fileName = GA_PATH + configuration + ".json";
             Scanner scFile = new Scanner(new File(fileName));
@@ -70,16 +90,18 @@ public class Application {
             double crossoverRatio = Double.parseDouble(getJSONValueFromLine(scFile.next()));
             String crossoverMethod = getJSONValueFromLine(scFile.next());
             String mutationMethod = getJSONValueFromLine(scFile.next());
-            GeneticAlgorithm.run(configuration, selectionMethod, crossoverMethod, crossoverRatio, mutationMethod,
-                    mutationRatio);
 
             scFile.close();
+
+            return GeneticAlgorithm.run(configuration, selectionMethod, crossoverMethod, crossoverRatio, mutationMethod,
+                    mutationRatio);
         } catch (FileNotFoundException e) {
             System.out.println(e);
+            return -1;
         }
     }
 
-    private static void runSA(String configuration) {
+    private static int runSA(String configuration) {
         try {
             String fileName = SA_PATH + configuration + ".json";
             Scanner scFile = new Scanner(new File(fileName));
@@ -93,12 +115,15 @@ public class Application {
             // SimulatedAnnealing.run(configuration, initialTemperature, coolingRate);
 
             scFile.close();
+
+            return -1;
         } catch (FileNotFoundException e) {
             System.out.println(e);
+            return -1;
         }
     }
 
-    private static void runPSO(String configuration) {
+    private static int runPSO(String configuration) {
         try {
             String fileName = PSO_PATH + configuration + ".json";
             Scanner scFile = new Scanner(new File(fileName));
@@ -119,8 +144,11 @@ public class Application {
             System.out.println(c2);
             // ParticleSwarmOptimization.run(configuration, numParticles, minVelocity,
             // maxVelocity, c1, c2, inertia);
+
+            return -1;
         } catch (FileNotFoundException e) {
             System.out.println(e);
+            return -1;
         }
     }
 
