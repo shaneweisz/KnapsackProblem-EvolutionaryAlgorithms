@@ -28,9 +28,9 @@ public class GeneticAlgorithm {
         generation--; // We stopped before evolving the next generation
 
         // Output final best solution
-        int maxValue = bestChromosome.getTotalValue()
-        System.out.println("Configuration " + configuration + ": " + ProblemConfiguration.instance.decimalFormat.format(generation) + " : "
-                + maxValue);
+        int maxValue = bestChromosome.getTotalValue();
+        System.out.println("Configuration " + configuration + ": "
+                + ProblemConfiguration.instance.decimalFormat.format(generation) + " : " + maxValue);
         // System.out.println("numberOfCrossoverOperations : " +
         // population.getNumberOfCrossoverOperations());
         // System.out.println("numberOfMutationOperations : " +
