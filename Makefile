@@ -14,8 +14,14 @@ SRC_FILES=$(SRC:%.java=$(SRCDIR)/%.java)
 
 default: $(CLASS_FILES)
 
-run:
-	java -cp $(BINDIR) Application -configuration ga_default_01
+runGA:
+	java -cp $(BINDIR) Application -search_best_configuration ga
+
+runSA:
+	java -cp $(BINDIR) Application -search_best_configuration sa
+
+runPSO:
+	java -cp $(BINDIR) Application -search_best_configuration pso
 
 clean:
 	rm $(BINDIR)/*.class

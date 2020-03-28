@@ -1,7 +1,9 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 import java.text.DecimalFormat;
+import java.nio.file.Files;
 
 /**
  * Main driver for the application. Either run the solver on a specific
@@ -37,9 +39,18 @@ public class Application {
                         maxValue = value;
                         bestConfiguration = configuration;
                     }
-                    System.out.println("Best configuration is " + bestConfiguration + ": ");
-                    // writeToJSON();
                 }
+                System.out.println("Best configuration is " + bestConfiguration + ": ");
+                String srcFile = GA_PATH + bestConfiguration + ".json";
+                String destFile = GA_PATH + "ga_best.json";
+                // Delete the best file if it already exists, because we will replace it
+                new File(destFile).delete();
+                try {
+                    Files.copy(new File(srcFile).toPath(), new File(destFile).toPath());
+                } catch (IOException e) {
+                    System.out.println(e);
+                }
+                // writeToJSON();
             } else if (method.equalsIgnoreCase("sa")) {
                 for (int i = 1; i <= NUM_SA_CONFIGS; i++) {
                     String configuration = "sa_default_" + decimalFormat.format(i);
@@ -48,9 +59,9 @@ public class Application {
                         maxValue = value;
                         bestConfiguration = configuration;
                     }
-                    System.out.println("Best configuration is " + bestConfiguration + ": ");
-                    // writeToJSON();
                 }
+                System.out.println("Best configuration is " + bestConfiguration + ": ");
+                // writeToJSON();
             } else if (method.equalsIgnoreCase("pso")) {
                 for (int i = 1; i <= NUM_PSO_CONFIGS; i++) {
                     String configuration = "pso_default_" + decimalFormat.format(i);
@@ -59,9 +70,10 @@ public class Application {
                         maxValue = value;
                         bestConfiguration = configuration;
                     }
-                    System.out.println("Best configuration is " + bestConfiguration + ": ");
-                    // writeToJSON();
                 }
+                System.out.println("Best configuration is " + bestConfiguration + ": ");
+                // writeToJSON();
+
             }
         }
     }

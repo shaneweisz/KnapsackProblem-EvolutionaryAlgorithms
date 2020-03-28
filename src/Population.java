@@ -171,6 +171,22 @@ public class Population {
      */
     private Chromosome[] selectParentsTS() {
         Chromosome[] parentArray = new Chromosome[2];
+
+        // Run two tournaments each to pick one of the parents
+        for (int i = 0; i < 2; i++) {
+            // Select the first contender for the tournament
+            int best = ProblemConfiguration.instance.randomGenerator.nextInt(population.length);
+            for (int j = 0; j < 3; j++) {
+                // Test three contenders against the current best contender
+                int contender = ProblemConfiguration.instance.randomGenerator.nextInt(population.length);
+                if (population[contender].getFitness() > population[best].getFitness()) {
+                    best = contender;
+                }
+            }
+            // Add the winner of the tournament as one of the parent
+            parentArray[i] = population[best];
+        }
+
         return parentArray;
     }
 
