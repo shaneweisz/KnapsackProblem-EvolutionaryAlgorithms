@@ -249,7 +249,7 @@ public class Chromosome implements Comparable<Chromosome> {
 
             return new Chromosome(newGene);
         }
-        // Chooses two random indices in the chromosome, and
+        // Chooses two distinct random indices in the chromosome, and
         // reverses the substring between them (inclusive of the endpoints)
         else if (method.equals("IVM")) {
             // Copy the current genes to the new chromosome
@@ -291,38 +291,67 @@ public class Chromosome implements Comparable<Chromosome> {
                 index2 = ProblemConfiguration.instance.randomGenerator.nextInt(this.gene.length);
             } while (index2 == index1); // Ensure the two chosen indices are not the same
 
-            // Make sure index1 < index2
-            int temp;
-            if (index2 < index1) {
-                temp = index1;
-                index1 = index2;
-                index2 = temp;
-            }
-            // Store the item directly after the first
-            temp = newGene[index1 + 1];
-            // Insert the second item directly after the first
-            newGene[index1 + 1] = newGene[index2];
+            // System.out.println("TEST: " + newGene[index2] + " inserted after " +
+            // newGene[index1]);
 
-            // Move the rest of the items back by one
-            int curr = temp, next;
-            for (int i = 1; i < index2 - index1; i++) {
-                // Store the next item which we are about to replace
-                next = newGene[index1 + 1 + i];
-                // Replace the next item with the current item i.e. moving the current item back
-                // by one
-                newGene[index1 + 1 + i] = curr;
-                // Set the current item to be the stored next value that is to be moved back
-                curr = next;
+            // We will insert the item at index2 directly after the item at index1
+
+            // If index1 is less than index2, since we are moving the item at index2 to the
+            // left, we will need to shift the other items right to accomodate
+            if (index1 < index2) {
+                // Store the item directly after the first
+                int temp = newGene[index1 + 1];
+                // Insert the second item directly after the first
+                newGene[index1 + 1] = newGene[index2];
+
+                // Move the rest of the items back by one
+                int curr = temp, next;
+                for (int i = 1; i < index2 - index1; i++) {
+                    // Store the next item which we are about to replace
+                    next = newGene[index1 + 1 + i];
+                    // Replace the next item with the current item i.e. moving the current item back
+                    // by one
+                    newGene[index1 + 1 + i] = curr;
+                    // Set the current item to be the stored next value that is to be moved back
+                    curr = next;
+                }
             }
+            // If index2 is less than index1, since we are moving the item at index2 to the
+            // right, we will need to shift the other items left to accomodate
+            else if (index2 < index1) {
+                // Store the item we are going to insert after index1
+                int itemToInsert = newGene[index2];
+                // Shift the other items back, including the item at index1
+                for (int i = index2; i < index1; i++) {
+                    newGene[i] = newGene[i + 1];
+                }
+                // Insert the item at index2 where the item at index1 was
+                newGene[index1] = itemToInsert;
+                // Note, the item at index2 now immediately follows the item at index1
+            }
+
             return new Chromosome(newGene);
-
         }
         // Select two random items in the chromosome, take the items between these two
         // as a group, and move the whole group to another random point in the
         // chromosome, displaced from the original
         else if (method.equals("DPM")) {
+            int[] newGene = new int[this.gene.length];
+
+            // Choose two random indices in the knapsack
+            int index1 = ProblemConfiguration.instance.randomGenerator.nextInt(this.gene.length);
+            int index2;
+            do {
+                index2 = ProblemConfiguration.instance.randomGenerator.nextInt(this.gene.length);
+            } while (index2 == index1); // Ensure the two chosen indices are not the same
+
+            int newStartIndex = ProblemConfiguration.instance.randomGenerator.nextInt(this.gene.length);
+
             // TO DO
-        } else if (method.equals("SM")) {
+        }
+        // Chooses two distinct random indices in the chromosome, and
+        // randomly shuffles the substring between them (inclusive of the endpoints)
+        else if (method.equals("SM")) {
             // Copy the current genes to the new chromosome
             int[] newGene = new int[this.gene.length];
             System.arraycopy(this.gene, 0, newGene, 0, this.gene.length);

@@ -1,6 +1,10 @@
 import java.util.Arrays;
 import java.util.Collections;
 
+/**
+ * Class for a population of chromosomes that evolves as part of the genetic
+ * algorithm.
+ */
 public class Population {
     private double elitismRatio;
     private String selectionMethod;
@@ -47,6 +51,7 @@ public class Population {
         return numberOfMutationOperations;
     }
 
+    /** Evolves the population to the next generation */
     public void evolve() {
         Chromosome[] chromosomeArray = new Chromosome[population.length];
 
@@ -198,5 +203,4 @@ public class Population {
         }
         return s;
     }
-
 }

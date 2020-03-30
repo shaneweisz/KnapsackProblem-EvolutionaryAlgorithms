@@ -1,3 +1,8 @@
+/**
+ * Class used for running a genetic algorithm solution to the knapsack problem,
+ * given the specified parameters such as selection method, crossover method
+ * etc.
+ */
 public class GeneticAlgorithm {
     private final static int POPULATION_SIZE = 250;
     private final static double ELITISM_RATIO = 0.1;
