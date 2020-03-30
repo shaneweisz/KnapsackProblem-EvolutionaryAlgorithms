@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * Class for a chromosome that will form part of the population in the genetic
  * algorithm. Each chromosome encodes a given knapsack configuration - i.e.
@@ -336,18 +338,62 @@ public class Chromosome implements Comparable<Chromosome> {
         // as a group, and move the whole group to another random point in the
         // chromosome, displaced from the original
         else if (method.equals("DPM")) {
-            int[] newGene = new int[this.gene.length];
+            // Create an array list with the elements from this gene array
+            ArrayList<Integer> newGeneList = new ArrayList<Integer>();
+            for (int x : this.gene) {
+                newGeneList.add(x);
+            }
 
             // Choose two random indices in the knapsack
+            // index1 will be the leftmost index of the group,
+            // index 2 will be the rightmost index
             int index1 = ProblemConfiguration.instance.randomGenerator.nextInt(this.gene.length);
             int index2;
             do {
                 index2 = ProblemConfiguration.instance.randomGenerator.nextInt(this.gene.length);
             } while (index2 == index1); // Ensure the two chosen indices are not the same
+            // Ensure index1 < index2
+            if (index2 < index1) {
+                int temp = index1;
+                index1 = index2;
+                index2 = temp;
+            }
 
-            int newStartIndex = ProblemConfiguration.instance.randomGenerator.nextInt(this.gene.length);
+            // The size of the group to be displaced
+            int groupSize = index2 - index1 + 1;
 
-            // TO DO
+            // Extract the group that we will displace
+            int[] group = new int[groupSize];
+            for (int i = 0; i <= index2 - index1; i++) {
+                group[i] = this.gene[index1 + i];
+            }
+
+            // Remove the group that is to be displaced from the original list
+            for (int i = 0; i < groupSize; i++) {
+                // Each element in the group becomes index1 after removing the previous element
+                newGeneList.remove(index1);
+            }
+
+            // Randomly choose the index in the resulting list where we must insert the
+            // displaced group
+            int insertIndex = ProblemConfiguration.instance.randomGenerator.nextInt(this.gene.length - groupSize + 1);
+
+            // Insert the displaced group at the chosen index
+            for (int i = groupSize - 1; i >= 0; i--) {
+                // Insert the group elements one-by-one at index `insertIndex`
+                // The order is backwards to ensure correct order in final list
+                newGeneList.add(insertIndex, group[i]);
+            }
+
+            // Cast from the Array List to an Integer array to an int array
+            Integer[] newIntegerGene = newGeneList.toArray(new Integer[this.gene.length]);
+            int[] newGene = new int[this.gene.length];
+            for (int i = 0; i < this.gene.length; i++) {
+                newGene[i] = newIntegerGene[i].intValue();
+            }
+
+            // Build the resulting Chromosome
+            return new Chromosome(newGene);
         }
         // Chooses two distinct random indices in the chromosome, and
         // randomly shuffles the substring between them (inclusive of the endpoints)
