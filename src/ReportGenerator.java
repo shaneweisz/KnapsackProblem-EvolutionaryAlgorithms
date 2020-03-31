@@ -1,4 +1,7 @@
 import java.time.format.DateTimeFormatter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 
@@ -9,6 +12,7 @@ import java.time.LocalDateTime;
  */
 public class ReportGenerator {
     private final static int BEST_KNOWN_OPTIMUM = 997;
+    private final static String REPORTS_PATH = "/Users/shaneweisz/Documents/UCT/Honours/Evolutionary Computing/Assignment/reports/";
 
     /**
      * Creates a report `report_[algorithm]_yyyymmdd.txt` based on inputted
@@ -23,7 +27,7 @@ public class ReportGenerator {
      * @param knapsacks     A String [] with with successive iterations' knapsacks
      * @param runtime       The time in ms the algorithm took to run
      */
-    public static void generateReport(String configuration, String params, int[] bweights, int[] bvalues,
+    public static String generateReport(String configuration, String params, int[] bweights, int[] bvalues,
             String[] knapsacks, int runtime) {
         String report = "";
 
@@ -76,7 +80,7 @@ public class ReportGenerator {
 
         report += addEqualsSigns();
 
-        System.out.println(report);
+        return report;
     }
 
     /** Returns a row of equal signs */
@@ -121,6 +125,32 @@ public class ReportGenerator {
         return "Pleateau | TO DO\n";
     }
 
+    /**
+     * Writes given text to a specified text file based on which configuration was
+     * run
+     */
+    private static void writeToFile(String text, String configuration) {
+        String algo = configuration.substring(0, configuration.indexOf("."));
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd");
+        LocalDateTime currDateTime = LocalDateTime.now();
+        String fileName = "report_" + algo + "_" + dtf.format(currDateTime) + ".txt";
+        File file = new File(REPORTS_PATH + fileName);
+        FileWriter fr = null;
+        try {
+            fr = new FileWriter(file);
+            fr.write(text);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            // close resources
+            try {
+                fr.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     /** For testing purposes */
     public static void main(String[] args) {
         String configuration = "ga_default_01.json";
@@ -129,6 +159,8 @@ public class ReportGenerator {
         int[] bvalues = { 1000, 997, 1120, 443, 1120 };
         String[] knapsacks = { "110", "000", "111", "101", "011" };
         int runtime = 1230;
-        generateReport(configuration, params, bweights, bvalues, knapsacks, runtime);
+        String report = generateReport(configuration, params, bweights, bvalues, knapsacks, runtime);
+        System.out.println(report);
+        writeToFile(report, configuration);
     }
 }

@@ -25,3 +25,6 @@ runPSO:
 
 clean:
 	rm $(BINDIR)/*.class
+
+cleanReports:
+	rm reports/*.txt

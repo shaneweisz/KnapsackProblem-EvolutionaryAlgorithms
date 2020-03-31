@@ -2,3 +2,4 @@
 *.class
 *.json
 *edited.csv
+reports/*.txt
