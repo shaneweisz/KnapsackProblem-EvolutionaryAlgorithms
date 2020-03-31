@@ -1,0 +1,134 @@
+import java.time.format.DateTimeFormatter;
+import java.text.DecimalFormat;
+import java.time.LocalDateTime;
+
+/**
+ * Class used for generating a report regarding important statistics regarding
+ * the evaluation of an algorithm - namely solution iterations, runtime,
+ * convergences and plateau statistics
+ */
+public class ReportGenerator {
+    private final static int BEST_KNOWN_OPTIMUM = 997;
+
+    /**
+     * Creates a report `report_[algorithm]_yyyymmdd.txt` based on inputted
+     * statistics
+     * 
+     * @param configuration The name of the JSON file with the configuration e.g.
+     *                      "ga_default_01.json"
+     * @param params        A string outlining the algorithm parameters e.g. "GA |
+     *                      #10000 | RWS | 2PX (0.7) | EXM (0.003)"
+     * @param bweights      An int [] with successive iterations' knapsack weights
+     * @param bvalues       An int [] with successive iterations' knapsack values
+     * @param knapsacks     A String [] with with successive iterations' knapsacks
+     * @param runtime       The time in ms the algorithm took to run
+     */
+    public static void generateReport(String configuration, String params, int[] bweights, int[] bvalues,
+            String[] knapsacks, int runtime) {
+        String report = "";
+
+        DateTimeFormatter dtfFull = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime currDateTime = LocalDateTime.now();
+
+        report += "Evaluation | " + dtfFull.format(currDateTime) + "\n";
+
+        report += "Configuration:\t" + configuration + "\n";
+
+        report += "\t\t" + params + "\n";
+
+        report += addEqualsSigns();
+
+        report += "#\tbweight\tbvalue\tsquality\tknapsack\n";
+
+        report += addDashes();
+
+        int numIterations = bweights.length;
+
+        report += 1 + "\t" + bweights[0] + "\t" + bvalues[0] + "\t" + getSolutionQuality(bvalues[0]) + "\t\t"
+                + knapsacks[0] + "\n";
+
+        report += "...\n";
+
+        report += numIterations + "\t" + bweights[numIterations - 1] + "\t" + bvalues[numIterations - 1] + "\t"
+                + getSolutionQuality(bvalues[numIterations - 1]) + "\t\t" + knapsacks[numIterations - 1] + "\n";
+
+        report += addDashes();
+
+        report += "[Statistics]\n";
+
+        report += "Runtime\t\t" + runtime + " ms\n\n";
+
+        report += "Convergence\t#\tbweight\tbvalue\tsquality\n";
+
+        // Print convergence statistics at 25%, 50%, 75% and 100% of iterations
+        int intervalSize = numIterations / 4;
+        for (int i = 1; i <= 4; i++) {
+            int index = intervalSize * i - 1;
+            report += "\t\t" + (index + 1) + "\t" + bweights[index] + "\t" + bvalues[index] + "\t"
+                    + getSolutionQuality(bvalues[index]) + "\n";
+        }
+
+        report += "\n";
+
+        report += addPlateauRow(bvalues);
+
+        report += "\n";
+
+        report += addEqualsSigns();
+
+        System.out.println(report);
+    }
+
+    /** Returns a row of equal signs */
+    private static String addEqualsSigns() {
+        // Add a row of ='s
+        String row = "";
+        for (int i = 0; i < 70; i++) {
+            row += "=";
+        }
+        row += "\n";
+        return row;
+    }
+
+    /** Returns a row of dashes */
+    private static String addDashes() {
+        // Add a row of -'s
+        String row = "";
+        for (int i = 0; i < 70; i++) {
+            row += "-";
+        }
+        row += "\n";
+        return row;
+    }
+
+    /**
+     * Given an int solution value, returns its solution quality as a percentage
+     * relative to the given previous best-known optimum of 997. e.g. 997 -> 100%,
+     * 498 -> 49.99%, etc.
+     */
+    private static String getSolutionQuality(int value) {
+        DecimalFormat df = new DecimalFormat("###.##");
+        double quality = (double) value / BEST_KNOWN_OPTIMUM;
+        return df.format(quality * 100) + "%";
+    }
+
+    /**
+     * Returns a line of the report corresponding to the longest sequence with low
+     * improvement. e.g. Pleateau | Longest sequence 443-472 with improvement less
+     * average 3%.
+     */
+    private static String addPlateauRow(int[] bvalues) {
+        return "Pleateau | TO DO\n";
+    }
+
+    /** For testing purposes */
+    public static void main(String[] args) {
+        String configuration = "ga_default_01.json";
+        String params = "GA | #10000 | RWS | 2PX (0.7) | EXM (0.003)";
+        int[] bweights = { 769, 800, 802, 650, 702 };
+        int[] bvalues = { 1000, 997, 1120, 443, 1120 };
+        String[] knapsacks = { "110", "000", "111", "101", "011" };
+        int runtime = 1230;
+        generateReport(configuration, params, bweights, bvalues, knapsacks, runtime);
+    }
+}
