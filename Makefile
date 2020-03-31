@@ -8,7 +8,7 @@ DOCDIR=doc
 $(BINDIR)/%.class:$(SRCDIR)/%.java
 	$(JAVAC) -d $(BINDIR)/ -cp $(BINDIR):$(SRCDIR): $<
 
-CLASSES=MersenneTwister.class KnapsackInstance.class ProblemConfiguration.class Chromosome.class Population.class GeneticAlgorithm.class Application.class ReportGenerator.class
+CLASSES=MersenneTwister.class KnapsackInstance.class ProblemConfiguration.class Chromosome.class Population.class GeneticAlgorithm.class  SimulatedAnnealing.class Application.class ReportGenerator.class
 CLASS_FILES=$(CLASSES:%.class=$(BINDIR)/%.class)
 SRC_FILES=$(SRC:%.java=$(SRCDIR)/%.java)
 
@@ -18,7 +18,7 @@ runGA:
 	java -cp $(BINDIR) Application -search_best_configuration ga
 
 runSA:
-	java -cp $(BINDIR) Application -search_best_configuration sa
+	java -cp $(BINDIR) Application -configuration sa_default_01
 
 runPSO:
 	java -cp $(BINDIR) Application -search_best_configuration pso

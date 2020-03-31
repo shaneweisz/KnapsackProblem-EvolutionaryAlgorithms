@@ -123,13 +123,11 @@ public class Application {
             int initialTemperature = Integer.parseInt(getJSONValueFromLine(scFile.next()));
             scFile.next(); // Skip the configuration since we already know it
             double coolingRate = Double.parseDouble(getJSONValueFromLine(scFile.next()));
-            System.out.println(initialTemperature);
-            System.out.println(coolingRate);
-            // SimulatedAnnealing.run(configuration, initialTemperature, coolingRate);
 
             scFile.close();
 
-            return -1;
+            SimulatedAnnealing sa = new SimulatedAnnealing(configuration, initialTemperature, coolingRate);
+            return sa.run();
         } catch (FileNotFoundException e) {
             System.out.println(e);
             return -1;

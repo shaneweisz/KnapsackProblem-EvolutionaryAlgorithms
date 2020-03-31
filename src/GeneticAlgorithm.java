@@ -24,6 +24,10 @@ public class GeneticAlgorithm {
         this.mutationRatio = mutationRatio;
     }
 
+    /**
+     * Returns the highest value of the knapsack achieved by the GA with the given
+     * parameters
+     */
     public int run() {
 
         // Create initial population
