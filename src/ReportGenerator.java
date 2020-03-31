@@ -18,8 +18,7 @@ public class ReportGenerator {
      * Creates a report `report_[algorithm]_yyyymmdd.txt` based on inputted
      * statistics
      * 
-     * @param configuration The name of the JSON file with the configuration e.g.
-     *                      "ga_default_01.json"
+     * @param configuration The name of the configuration e.g. "ga_default_01"
      * @param params        A string outlining the algorithm parameters e.g. "GA |
      *                      #10000 | RWS | 2PX (0.7) | EXM (0.003)"
      * @param bweights      An int [] with successive iterations' knapsack weights
@@ -28,7 +27,7 @@ public class ReportGenerator {
      * @param runtime       The time in ms the algorithm took to run
      */
     public static String generateReport(String configuration, String params, int[] bweights, int[] bvalues,
-            String[] knapsacks, int runtime) {
+            String[] knapsacks, long runtime) {
         String report = "";
 
         DateTimeFormatter dtfFull = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -36,7 +35,7 @@ public class ReportGenerator {
 
         report += "Evaluation | " + dtfFull.format(currDateTime) + "\n";
 
-        report += "Configuration:\t" + configuration + "\n";
+        report += "Configuration:\t" + configuration + ".json\n";
 
         report += "\t\t" + params + "\n";
 
@@ -48,7 +47,7 @@ public class ReportGenerator {
 
         int numIterations = bweights.length;
 
-        report += 1 + "\t" + bweights[0] + "\t" + bvalues[0] + "\t" + getSolutionQuality(bvalues[0]) + "\t\t"
+        report += 1 + "\t\t" + bweights[0] + "\t" + bvalues[0] + " \t" + getSolutionQuality(bvalues[0]) + "\t\t"
                 + knapsacks[0] + "\n";
 
         report += "...\n";
@@ -62,13 +61,13 @@ public class ReportGenerator {
 
         report += "Runtime\t\t" + runtime + " ms\n\n";
 
-        report += "Convergence\t#\tbweight\tbvalue\tsquality\n";
+        report += "Convergence\t#\t\tbweight\tbvalue\tsquality\n";
 
         // Print convergence statistics at 25%, 50%, 75% and 100% of iterations
         int intervalSize = numIterations / 4;
         for (int i = 1; i <= 4; i++) {
             int index = intervalSize * i - 1;
-            report += "\t\t" + (index + 1) + "\t" + bweights[index] + "\t" + bvalues[index] + "\t"
+            report += "\t\t\t" + (index + 1) + "\t" + bweights[index] + "\t\t" + bvalues[index] + " \t"
                     + getSolutionQuality(bvalues[index]) + "\n";
         }
 
@@ -127,13 +126,12 @@ public class ReportGenerator {
 
     /**
      * Writes given text to a specified text file based on which configuration was
-     * run
+     * run e.g. ga_default_01
      */
-    private static void writeToFile(String text, String configuration) {
-        String algo = configuration.substring(0, configuration.indexOf("."));
+    public static void writeToFile(String text, String configuration) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd");
         LocalDateTime currDateTime = LocalDateTime.now();
-        String fileName = "report_" + algo + "_" + dtf.format(currDateTime) + ".txt";
+        String fileName = "report_" + configuration + "_" + dtf.format(currDateTime) + ".txt";
         File file = new File(REPORTS_PATH + fileName);
         FileWriter fr = null;
         try {
@@ -158,7 +156,7 @@ public class ReportGenerator {
         int[] bweights = { 769, 800, 802, 650, 702 };
         int[] bvalues = { 1000, 997, 1120, 443, 1120 };
         String[] knapsacks = { "110", "000", "111", "101", "011" };
-        int runtime = 1230;
+        long runtime = 1230;
         String report = generateReport(configuration, params, bweights, bvalues, knapsacks, runtime);
         System.out.println(report);
         writeToFile(report, configuration);

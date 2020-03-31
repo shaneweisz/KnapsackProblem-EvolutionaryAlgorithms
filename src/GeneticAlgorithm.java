@@ -4,7 +4,7 @@
  * etc.
  */
 public class GeneticAlgorithm {
-    private final static int POPULATION_SIZE = 250;
+    private final static int POPULATION_SIZE = 300;
     private final static double ELITISM_RATIO = 0.1;
 
     public static int run(String configuration, String selectionMethod, String crossoverMethod, double crossoverRatio,
@@ -14,32 +14,49 @@ public class GeneticAlgorithm {
         Population population = new Population(POPULATION_SIZE, selectionMethod, crossoverMethod, crossoverRatio,
                 mutationMethod, mutationRatio, ELITISM_RATIO);
         Chromosome bestChromosome = population.getPopulation()[0];
-        double currentBestFitness = bestChromosome.getFitness();
+        // double currentBestFitness = bestChromosome.getFitness();
         int generation = 1;
+
+        // To be used for statistics for report
+        int numGenerations = ProblemConfiguration.instance.maximumNumberOfIterations;
+        String params = String.format("GA | #%d | %s | %s (%.1f) | %s (%.3f)", numGenerations, selectionMethod,
+                crossoverMethod, crossoverRatio, mutationMethod, mutationRatio);
+        int[] bweights = new int[numGenerations];
+        int[] bvalues = new int[numGenerations];
+        String[] knapsacks = new String[numGenerations];
+        long startTime = System.currentTimeMillis();
+
+        bweights[0] = bestChromosome.getTotalWeight();
+        bvalues[0] = bestChromosome.getTotalValue();
+        knapsacks[0] = bestChromosome.toString();
 
         // Iterate through generations
         while ((++generation) <= ProblemConfiguration.instance.maximumNumberOfIterations) {
             population.evolve();
             bestChromosome = population.getPopulation()[0];
-            if (bestChromosome.getFitness() > currentBestFitness) {
-                currentBestFitness = bestChromosome.getFitness();
-                // System.out.println("Generation " +
-                // ProblemConfiguration.instance.decimalFormat.format(generation)
-                // + ": Weight = " + bestChromosome.getTotalWeight() + ", Value = " +
-                // bestChromosome.getFitness()
-                // + ", Knapsack = " + bestChromosome);
-            }
+
+            bweights[generation - 1] = bestChromosome.getTotalWeight();
+            bvalues[generation - 1] = bestChromosome.getTotalValue();
+            knapsacks[generation - 1] = bestChromosome.toString();
+
+            // if (bestChromosome.getFitness() > currentBestFitness) {
+            // currentBestFitness = bestChromosome.getFitness();
+            // }
         }
         generation--; // We stopped before evolving the next generation
 
-        // Output final best solution
+        long endTime = System.currentTimeMillis();
+        long runtime = endTime - startTime;
+
+        // Final best solution
         int maxValue = bestChromosome.getTotalValue();
-        System.out.println("Configuration " + configuration + ": "
-                + ProblemConfiguration.instance.decimalFormat.format(generation) + " : " + maxValue);
-        // System.out.println("numberOfCrossoverOperations : " +
-        // population.getNumberOfCrossoverOperations());
-        // System.out.println("numberOfMutationOperations : " +
-        // population.getNumberOfMutationOperations());
+
+        System.out.println(configuration + ": " + maxValue);
+
+        // Create report
+        String report = ReportGenerator.generateReport(configuration, params, bweights, bvalues, knapsacks, runtime);
+        ReportGenerator.writeToFile(report, configuration);
+
         return maxValue;
     }
 }

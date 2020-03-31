@@ -40,7 +40,7 @@ public class Application {
                         bestConfiguration = configuration;
                     }
                 }
-                System.out.println("Best configuration is " + bestConfiguration + ": ");
+                System.out.println("Best configuration is " + bestConfiguration);
                 String srcFile = GA_PATH + bestConfiguration + ".json";
                 String destFile = GA_PATH + "ga_best.json";
                 // Delete the best file if it already exists, because we will replace it
@@ -60,7 +60,7 @@ public class Application {
                         bestConfiguration = configuration;
                     }
                 }
-                System.out.println("Best configuration is " + bestConfiguration + ": ");
+                System.out.println("Best configuration is " + bestConfiguration);
                 // writeToJSON();
             } else if (method.equalsIgnoreCase("pso")) {
                 for (int i = 1; i <= NUM_PSO_CONFIGS; i++) {
@@ -71,7 +71,7 @@ public class Application {
                         bestConfiguration = configuration;
                     }
                 }
-                System.out.println("Best configuration is " + bestConfiguration + ": ");
+                System.out.println("Best configuration is " + bestConfiguration);
                 // writeToJSON();
 
             }
