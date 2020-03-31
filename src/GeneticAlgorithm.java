@@ -7,8 +7,24 @@ public class GeneticAlgorithm {
     private final static int POPULATION_SIZE = 300;
     private final static double ELITISM_RATIO = 0.1;
 
-    public static int run(String configuration, String selectionMethod, String crossoverMethod, double crossoverRatio,
+    private String configuration;
+    private String selectionMethod;
+    private String crossoverMethod;
+    private double crossoverRatio;
+    private String mutationMethod;
+    private double mutationRatio;
+
+    public GeneticAlgorithm(String configuration, String selectionMethod, String crossoverMethod, double crossoverRatio,
             String mutationMethod, double mutationRatio) {
+        this.configuration = configuration;
+        this.selectionMethod = selectionMethod;
+        this.crossoverMethod = crossoverMethod;
+        this.crossoverRatio = crossoverRatio;
+        this.mutationMethod = mutationMethod;
+        this.mutationRatio = mutationRatio;
+    }
+
+    public int run() {
 
         // Create initial population
         Population population = new Population(POPULATION_SIZE, selectionMethod, crossoverMethod, crossoverRatio,

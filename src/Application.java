@@ -105,8 +105,9 @@ public class Application {
 
             scFile.close();
 
-            return GeneticAlgorithm.run(configuration, selectionMethod, crossoverMethod, crossoverRatio, mutationMethod,
-                    mutationRatio);
+            GeneticAlgorithm ga = new GeneticAlgorithm(configuration, selectionMethod, crossoverMethod, crossoverRatio,
+                    mutationMethod, mutationRatio);
+            return ga.run();
         } catch (FileNotFoundException e) {
             System.out.println(e);
             return -1;
