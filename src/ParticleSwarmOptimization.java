@@ -4,7 +4,6 @@
  * velocity etc.
  */
 public class ParticleSwarmOptimization {
-
     private String configuration;
     private int numParticles;
     private int minVelocity;
@@ -43,4 +42,5 @@ public class ParticleSwarmOptimization {
     public int run() {
         return -1;
     }
+
 }

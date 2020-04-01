@@ -8,7 +8,7 @@ DOCDIR=doc
 $(BINDIR)/%.class:$(SRCDIR)/%.java
 	$(JAVAC) -d $(BINDIR)/ -cp $(BINDIR):$(SRCDIR): $<
 
-CLASSES=MersenneTwister.class KnapsackInstance.class ProblemConfiguration.class Chromosome.class Population.class GeneticAlgorithm.class  SimulatedAnnealing.class Application.class ReportGenerator.class
+CLASSES=MersenneTwister.class KnapsackInstance.class ProblemConfiguration.class Chromosome.class Population.class GeneticAlgorithm.class  SimulatedAnnealing.class Application.class ReportGenerator.class Vector.class Particle.class ParticleSwarmOptimization.class
 CLASS_FILES=$(CLASSES:%.class=$(BINDIR)/%.class)
 SRC_FILES=$(SRC:%.java=$(SRCDIR)/%.java)
 
