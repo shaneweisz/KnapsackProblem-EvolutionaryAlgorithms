@@ -118,35 +118,19 @@ public class SimulatedAnnealing {
 
     private int[] generateNeighbor(int[] knapsack) {
         int[] neighbor = new int[knapsack.length];
-        System.arraycopy(knapsack, 0, neighbor, 0, knapsack.length);
-
-        // Get the current chosen items
-        ArrayList<Integer> currentUsed = new ArrayList<Integer>();
-        for (int i = 0; i < knapsack.length; i++) {
-            if (knapsack[i] == 1) {
-                currentUsed.add(i);
+        int[] bestNeighbor = new int[knapsack.length];
+        int bestEnergy = 0;
+        for (int i = 0; i < 30; i++) {
+            int randomItem = ProblemConfiguration.instance.randomGenerator.nextInt(150);
+            System.arraycopy(knapsack, 0, neighbor, 0, knapsack.length);
+            neighbor[randomItem] = neighbor[randomItem] == 1 ? 0 : 1;
+            if (getValue(neighbor) > bestEnergy) {
+                bestEnergy = getValue(neighbor);
+                System.arraycopy(neighbor, 0, bestNeighbor, 0, knapsack.length);
             }
         }
-        int numUsed = currentUsed.size();
 
-        // Remove randomly one of the chosen items
-        int itemToRemove = currentUsed.get(ProblemConfiguration.instance.randomGenerator.nextInt(numUsed));
-        neighbor[itemToRemove] = 0;
-
-        // Add one random item that keeps the knapsack valid
-        do {
-            int randomItem = ProblemConfiguration.instance.randomGenerator.nextInt(knapsack.length);
-            if (neighbor[randomItem] == 1) {
-                continue;
-            }
-            neighbor[randomItem] = 1;
-            if (!isValid(neighbor)) {
-                neighbor[randomItem] = 0; // put back the item
-                continue;
-            }
-        } while (!isValid(neighbor));
-
-        return neighbor;
+        return bestNeighbor;
     }
 
     public static void main(String[] args) {
