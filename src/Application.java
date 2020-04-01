@@ -162,14 +162,11 @@ public class Application {
             int numParticles = Integer.parseInt(getJSONValueFromLine(scFile.next()));
             double c1 = Double.parseDouble(getJSONValueFromLine(scFile.next()));
             double c2 = Double.parseDouble(getJSONValueFromLine(scFile.next()));
-            System.out.println(minVelocity);
-            System.out.println(maxVelocity);
-            System.out.println(inertia);
-            System.out.println(numParticles);
-            System.out.println(c1);
-            System.out.println(c2);
-            // ParticleSwarmOptimization.run(configuration, numParticles, minVelocity,
+
+            // ParticleSwarmOptimization pso = new ParticleSwarmOptimization(configuration,
+            // numParticles, minVelocity,
             // maxVelocity, c1, c2, inertia);
+            // return pso.run();
 
             return -1;
         } catch (FileNotFoundException e) {
