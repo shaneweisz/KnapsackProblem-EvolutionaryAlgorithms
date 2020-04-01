@@ -29,21 +29,31 @@ public class SimulatedAnnealing {
      * parameters
      */
     public int run() {
+        // To be used for statistics for report
+        long startTime = System.currentTimeMillis();
+        int maxIterations = ProblemConfiguration.instance.maximumNumberOfIterations;
+        int[] bweights = new int[maxIterations];
+        int[] bvalues = new int[maxIterations];
+        String[] knapsacks = new String[maxIterations];
+
         // Initialize the temperature
         double temperature = initialTemperature;
 
         // Start with an initial random solution
         int[] knapsack = generateRandomKnapsack();
-        System.out.println("Initial solution: " + getValue(knapsack));
+        // System.out.println("Initial solution: " + getValue(knapsack));
+        bweights[0] = getWeight(knapsack);
+        bvalues[0] = getValue(knapsack);
+        knapsacks[0] = displayKnapsack(knapsack);
 
         // To store the best knapsack found so far
         int[] bestKnapsack = knapsack;
 
-        int i = 1; // To keep track of the number of iterations
+        int numIterations = 1; // To keep track of the number of iterations
 
-        // Stop the loop if the max number of generations has been hit
-        // or the temperature is below the specified minimum
-        while (i <= ProblemConfiguration.instance.maximumNumberOfIterations && temperature > MIN_TEMP) {
+        // Stop the loop if the temperature is below the specified minimum
+        // or the max number of generations has been hit
+        while (temperature > MIN_TEMP && numIterations < maxIterations) {
             // Generate a random neighbor solution by flipping a random bit
             int[] neighbor = generateNeighbor(knapsack);
 
@@ -59,19 +69,37 @@ public class SimulatedAnnealing {
             // Update the current best solution if necessary
             if (getValue(knapsack) > getValue(bestKnapsack)) {
                 bestKnapsack = knapsack;
-                System.out.println(String.format("Temperature %.2f: W=%d V=%d", temperature, getWeight(knapsack),
-                        getValue(knapsack)));
+                // System.out.println(String.format("Temperature %.2f: W=%d V=%d", temperature,
+                // getWeight(knapsack),
+                // getValue(knapsack)));
             }
 
-            // Have 750 iterations at each temperature
-            if (i % 750 == 0) {
+            // Have 1000 iterations at each temperature
+            if (numIterations % 1000 == 0) {
                 temperature *= (1 - coolingRate);
             }
 
-            i += 1;
+            bweights[numIterations] = getWeight(bestKnapsack);
+            bvalues[numIterations] = getValue(bestKnapsack);
+            knapsacks[numIterations] = displayKnapsack(bestKnapsack);
+
+            numIterations += 1;
         }
 
-        return getValue(bestKnapsack);
+        // To be used for statistics for report
+        long endTime = System.currentTimeMillis();
+        long runtime = endTime - startTime;
+        String params = String.format("SA | #%d | Initial Temperature = %d | Cooling Rate = %.1f", numIterations,
+                initialTemperature, coolingRate);
+
+        String report = ReportGenerator.generateReport(configuration, params, bweights, bvalues, knapsacks, runtime,
+                numIterations);
+        ReportGenerator.writeToFile(report, configuration);
+
+        int maxValue = getValue(bestKnapsack);
+        System.out.println(configuration + ": " + maxValue);
+
+        return maxValue;
     }
 
     /**
@@ -166,6 +194,19 @@ public class SimulatedAnnealing {
         System.arraycopy(knapsack, 0, neighbor, 0, knapsack.length);
         neighbor[randomItem] = neighbor[randomItem] == 1 ? 0 : 1;
         return neighbor;
+    }
+
+    /**
+     * Formats the knapsack as a string e.g. "[0101110...1110]" for display purposes
+     */
+    public String displayKnapsack(int[] knapsack) {
+        String s = "[";
+        int limit = 26;
+        for (int i = 0; i < limit; i++) {
+            s += knapsack[i];
+        }
+        s += "...]";
+        return s;
     }
 
     /** Used for testing purposes */

@@ -18,10 +18,10 @@ runGA:
 	java -cp $(BINDIR) Application -search_best_configuration ga
 
 runSA:
-	java -cp $(BINDIR) Application -configuration sa_default_01
+	java -cp $(BINDIR) Application -search_best_configuration sa
 
 runPSO:
-	java -cp $(BINDIR) Application -search_best_configuration pso
+	java -cp $(BINDIR) Application -configuration pso_default_01
 
 clean:
 	rm $(BINDIR)/*.class

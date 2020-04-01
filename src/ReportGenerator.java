@@ -27,7 +27,7 @@ public class ReportGenerator {
      * @param runtime       The time in ms the algorithm took to run
      */
     public static String generateReport(String configuration, String params, int[] bweights, int[] bvalues,
-            String[] knapsacks, long runtime) {
+            String[] knapsacks, long runtime, int numIterations) {
         String report = "";
 
         DateTimeFormatter dtfFull = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -45,14 +45,12 @@ public class ReportGenerator {
 
         report += addDashes();
 
-        int numIterations = bweights.length;
-
         report += 1 + "\t\t" + bweights[0] + "\t" + bvalues[0] + " \t" + getSolutionQuality(bvalues[0]) + "\t\t"
                 + knapsacks[0] + "\n";
 
         report += "...\n";
 
-        report += numIterations + "\t" + bweights[numIterations - 1] + "\t" + bvalues[numIterations - 1] + "\t"
+        report += numIterations + "\t" + bweights[numIterations - 1] + "\t" + bvalues[numIterations - 1] + " \t"
                 + getSolutionQuality(bvalues[numIterations - 1]) + "\t\t" + knapsacks[numIterations - 1] + "\n";
 
         report += addDashes();
@@ -67,7 +65,7 @@ public class ReportGenerator {
         int intervalSize = numIterations / 4;
         for (int i = 1; i <= 4; i++) {
             int index = intervalSize * i - 1;
-            report += "\t\t\t" + (index + 1) + "\t" + bweights[index] + "\t\t" + bvalues[index] + " \t"
+            report += "\t\t\t" + (index + 1) + " \t" + bweights[index] + "\t\t" + bvalues[index] + " \t"
                     + getSolutionQuality(bvalues[index]) + "\n";
         }
 
@@ -157,7 +155,7 @@ public class ReportGenerator {
         int[] bvalues = { 1000, 997, 1120, 443, 1120 };
         String[] knapsacks = { "110", "000", "111", "101", "011" };
         long runtime = 1230;
-        String report = generateReport(configuration, params, bweights, bvalues, knapsacks, runtime);
+        String report = generateReport(configuration, params, bweights, bvalues, knapsacks, runtime, bweights.length);
         System.out.println(report);
         writeToFile(report, configuration);
     }

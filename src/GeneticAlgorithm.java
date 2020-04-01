@@ -74,7 +74,8 @@ public class GeneticAlgorithm {
         System.out.println(configuration + ": " + maxValue);
 
         // Create report
-        String report = ReportGenerator.generateReport(configuration, params, bweights, bvalues, knapsacks, runtime);
+        String report = ReportGenerator.generateReport(configuration, params, bweights, bvalues, knapsacks, runtime,
+                numGenerations);
         ReportGenerator.writeToFile(report, configuration);
 
         return maxValue;

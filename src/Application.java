@@ -50,7 +50,6 @@ public class Application {
                 } catch (IOException e) {
                     System.out.println(e);
                 }
-                // writeToJSON();
             } else if (method.equalsIgnoreCase("sa")) {
                 for (int i = 1; i <= NUM_SA_CONFIGS; i++) {
                     String configuration = "sa_default_" + decimalFormat.format(i);
@@ -61,7 +60,15 @@ public class Application {
                     }
                 }
                 System.out.println("Best configuration is " + bestConfiguration);
-                // writeToJSON();
+                String srcFile = SA_PATH + bestConfiguration + ".json";
+                String destFile = SA_PATH + "sa_best.json";
+                // Delete the best file if it already exists, because we will replace it
+                new File(destFile).delete();
+                try {
+                    Files.copy(new File(srcFile).toPath(), new File(destFile).toPath());
+                } catch (IOException e) {
+                    System.out.println(e);
+                }
             } else if (method.equalsIgnoreCase("pso")) {
                 for (int i = 1; i <= NUM_PSO_CONFIGS; i++) {
                     String configuration = "pso_default_" + decimalFormat.format(i);
@@ -72,7 +79,15 @@ public class Application {
                     }
                 }
                 System.out.println("Best configuration is " + bestConfiguration);
-                // writeToJSON();
+                String srcFile = PSO_PATH + bestConfiguration + ".json";
+                String destFile = PSO_PATH + "pso_best.json";
+                // Delete the best file if it already exists, because we will replace it
+                new File(destFile).delete();
+                try {
+                    Files.copy(new File(srcFile).toPath(), new File(destFile).toPath());
+                } catch (IOException e) {
+                    System.out.println(e);
+                }
 
             }
         }
