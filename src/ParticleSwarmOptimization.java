@@ -4,6 +4,8 @@
  * velocity etc.
  */
 public class ParticleSwarmOptimization {
+
+    // Parameters
     private String configuration;
     private int numParticles;
     private int minVelocity;
@@ -11,6 +13,10 @@ public class ParticleSwarmOptimization {
     private double c1;
     private double c2;
     private double inertia;
+
+    // Best values
+    private Vector bestPosition;
+    private double globalBestEvaluationValue;
 
     /**
      * Parametrized constructor for a ParticleSwarmOptimization instance with
@@ -41,6 +47,50 @@ public class ParticleSwarmOptimization {
      */
     public int run() {
         return -1;
+    }
+
+    private Particle[] initialize() {
+        Particle[] particles = new Particle[numParticles];
+
+        for (int i = 0; i < numParticles; i++) {
+            Particle particle = new Particle();
+            particles[i] = particle;
+            updateGlobalBest(particle);
+        }
+
+        return particles;
+    }
+
+    private void updateGlobalBest(Particle particle) {
+        if (particle.getIndividualBestValue() > globalBestEvaluationValue) {
+            bestPosition = particle.getBestPosition();
+            globalBestEvaluationValue = particle.getIndividualBestValue();
+        }
+    }
+
+    private void updateVelocity(Particle particle) {
+        Vector oldVelocity = particle.getVelocity();
+        Vector pBest = particle.getBestPosition();
+        Vector gBest = bestPosition.clone();
+        Vector position = particle.getPosition();
+
+        double randomValue01 = ProblemConfiguration.instance.randomGenerator.nextDouble();
+        double randomValue02 = ProblemConfiguration.instance.randomGenerator.nextDouble();
+
+        Vector newVelocity = oldVelocity.clone();
+        newVelocity.multiply(inertia);
+
+        pBest.subtract(position);
+        pBest.multiply(c1);
+        pBest.multiply(randomValue01);
+        newVelocity.add(pBest);
+
+        gBest.subtract(position);
+        gBest.multiply(c2);
+        gBest.multiply(randomValue02);
+        newVelocity.add(gBest);
+
+        particle.setVelocity(newVelocity);
     }
 
 }

@@ -7,7 +7,7 @@ public class Particle {
     public Vector bestPosition;
     public double individualBestValue;
 
-    public Particle(Vector position, Vector velocity) {
+    public Particle() {
         position = new Vector();
         velocity = new Vector();
         bestPosition = position;
@@ -39,6 +39,10 @@ public class Particle {
         return velocity.clone();
     }
 
+    public void setVelocity(Vector velocity) {
+        this.velocity = velocity.clone();
+    }
+
     public Vector getBestPosition() {
         return bestPosition.clone();
     }
@@ -48,6 +52,7 @@ public class Particle {
     }
 
     public void updatePosition() {
+
         this.position.add(velocity);
     }
 
@@ -105,9 +110,5 @@ public class Particle {
             position.setValue(random_item, 1);
             total_weight += weight;
         }
-    }
-
-    public void updateValues(double inertia, double c1, double c2, Vector gBest, double minimumVelocity,
-            double maximumVelocity) {
     }
 }
