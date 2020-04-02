@@ -61,12 +61,14 @@ public class ParticleSwarmOptimization {
         knapsacks[0] = bestPosition.toString();
 
         int previousGlobalBestEvaluationValue = globalBestEvaluationValue;
-        System.out.println("Running...");
-        System.out.println("Global best evaluation (iteration " + 0 + "):\t" + globalBestEvaluationValue);
+        // System.out.println("Running...");
+        // System.out.println("Global best evaluation (iteration " + 0 + "):\t" +
+        // globalBestEvaluationValue);
 
         for (int i = 0; i < ProblemConfiguration.instance.maximumNumberOfIterations; i++) {
             if (globalBestEvaluationValue > previousGlobalBestEvaluationValue) {
-                System.out.println("Global best evaluation (iteration " + (i + 1) + "):\t" + globalBestEvaluationValue);
+                // System.out.println("Global best evaluation (iteration " + (i + 1) + "):\t" +
+                // globalBestEvaluationValue);
                 previousGlobalBestEvaluationValue = globalBestEvaluationValue;
             }
 
@@ -87,10 +89,10 @@ public class ParticleSwarmOptimization {
             knapsacks[i] = bestPosition.toString();
         }
 
-        System.out.println();
-        System.out.println("Result:");
-        System.out.println("Global best evaulation " + globalBestEvaluationValue);
-        System.out.println("Best knapsack " + bestPosition);
+        // System.out.println();
+        // System.out.println("Result:");
+        // System.out.println("Global best evaulation " + globalBestEvaluationValue);
+        // System.out.println("Best knapsack " + bestPosition);
 
         // To be used for statistics for report
         long endTime = System.currentTimeMillis();
@@ -103,9 +105,14 @@ public class ParticleSwarmOptimization {
                 maxIterations);
         ReportGenerator.writeToFile(report, configuration);
 
+        System.out.println(configuration + ": " + globalBestEvaluationValue);
+
         return globalBestEvaluationValue;
     }
 
+    /**
+     * Initialize the swarm of particles by generating particles at random positions
+     */
     private Particle[] initialize() {
         Particle[] particles = new Particle[numParticles];
 
@@ -118,6 +125,10 @@ public class ParticleSwarmOptimization {
         return particles;
     }
 
+    /**
+     * Updates the global best position if the particle's current position is better
+     * than the current global best
+     */
     private void updateGlobalBest(Particle particle) {
         if (particle.getIndividualBestValue() > globalBestEvaluationValue) {
             bestPosition = particle.getBestPosition();
@@ -125,6 +136,10 @@ public class ParticleSwarmOptimization {
         }
     }
 
+    /**
+     * Updates a particle's velocity based on its old velocity, its current
+     * position, the global best position and its individual best position
+     */
     private void updateVelocity(Particle particle) {
         Vector oldVelocity = particle.getVelocity();
         Vector pBest = particle.getBestPosition();
@@ -148,6 +163,7 @@ public class ParticleSwarmOptimization {
         newVelocity.add(gBest);
 
         // Check the velocities are within the max and min bounds
+        // If not, change them to be the bounds
         for (int i = 0; i < newVelocity.size(); i++) {
             if (newVelocity.getValue(i) > maxVelocity) {
                 newVelocity.setValue(i, maxVelocity);
@@ -160,6 +176,7 @@ public class ParticleSwarmOptimization {
         particle.setVelocity(newVelocity);
     }
 
+    // For testing purposes
     public static void main(String[] args) {
         String configuration = "test";
         int numParticles = 100;

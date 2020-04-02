@@ -7,6 +7,7 @@ public class Particle {
     public Vector bestPosition;
     public int individualBestValue;
 
+    /** Create a new particle with a randomly initialized position */
     public Particle() {
         position = new Vector();
         velocity = new Vector();
@@ -17,6 +18,7 @@ public class Particle {
         individualBestValue = evaluateCurrentPosition();
     }
 
+    /** Returns the fitness of the knapsack at the current position */
     public int evaluateCurrentPosition() {
         if (!isValid(position)) {
             return 0;
@@ -24,6 +26,10 @@ public class Particle {
         return getValue(position);
     }
 
+    /**
+     * Updates the particle's individual best value - should be invoked once the
+     * particle's position has changed
+     */
     public void updateIndividualBestValue() {
         int value = evaluateCurrentPosition();
         if (value > individualBestValue) {
@@ -33,29 +39,48 @@ public class Particle {
         }
     }
 
+    /** Returns a cloned copy of the particle's position vector */
     public Vector getPosition() {
         return position.clone();
     }
 
+    /** Returns a cloned copy of the particle's velocity vector */
     public Vector getVelocity() {
         return velocity.clone();
     }
 
+    /** Sets the particle's velocity vector to a new vector */
     public void setVelocity(Vector velocity) {
         this.velocity = velocity.clone();
     }
 
+    /**
+     * Returns the particle's a cloned copy of the particle's best position vector
+     */
     public Vector getBestPosition() {
         return bestPosition.clone();
     }
 
+    /** Reurns the best fitness value the particle has encountered so far */
     public int getIndividualBestValue() {
         return individualBestValue;
     }
 
+    /**
+     * Updates the particle's position to its new position after its velocity has
+     * changed.
+     * 
+     * Uses the sigmoid function to map each dimension's velocity value to a value
+     * between 0 and 1 that represents the probability of the corresponding item
+     * being in the knapsack or not - and then updates the position vector in
+     * accordance with this probability
+     */
     public void updatePosition() {
+        // Loop through each dimension of the position vector
         for (int i = 0; i < position.size(); i++) {
             double rand = ProblemConfiguration.instance.randomGenerator.nextDouble();
+            // Update the position dimension's value according to the probability
+            // given by the sigmoid function applied to the velocity
             if (rand < (1.0 / (1 + Math.exp(-velocity.getValue(i))))) {
                 this.position.setValue(i, 1);
             } else {
@@ -97,8 +122,8 @@ public class Particle {
     }
 
     /**
-     * Generates a random knapsack by randomly adding items to the knapsack, and
-     * stopping just before the knapsack becomes overweight
+     * Generates a random position vector (a knapsack) by randomly adding items to
+     * the knapsack, and stopping just before the knapsack becomes overweight
      */
     public void setRandomPosition() {
         int total_weight = 0;

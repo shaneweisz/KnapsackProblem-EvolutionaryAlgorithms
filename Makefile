@@ -21,7 +21,7 @@ runSA:
 	java -cp $(BINDIR) Application -search_best_configuration sa
 
 runPSO:
-	java -cp $(BINDIR) Application -configuration pso_default_01
+	java -cp $(BINDIR) Application -search_best_configuration pso
 
 clean:
 	rm $(BINDIR)/*.class
