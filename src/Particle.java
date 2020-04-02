@@ -1,16 +1,17 @@
 /**
- * Class that encodes a single particle that participates in the swarm in PSO
+ * Class that encodes a particle that participates in a swarm in PSO
  */
 public class Particle {
     public Vector position;
     public Vector velocity;
     public Vector bestPosition;
-    public double individualBestValue;
+    public int individualBestValue;
 
     public Particle() {
         position = new Vector();
         velocity = new Vector();
         bestPosition = position;
+        // Randomly initialize the position of a new particle
         setRandomPosition();
         bestPosition = position.clone();
         individualBestValue = evaluateCurrentPosition();
@@ -26,6 +27,7 @@ public class Particle {
     public void updateIndividualBestValue() {
         int value = evaluateCurrentPosition();
         if (value > individualBestValue) {
+            // System.out.println("New individual best");
             bestPosition = position.clone();
             individualBestValue = value;
         }
@@ -47,17 +49,23 @@ public class Particle {
         return bestPosition.clone();
     }
 
-    public double getIndividualBestValue() {
+    public int getIndividualBestValue() {
         return individualBestValue;
     }
 
     public void updatePosition() {
-
-        this.position.add(velocity);
+        for (int i = 0; i < position.size(); i++) {
+            double rand = ProblemConfiguration.instance.randomGenerator.nextDouble();
+            if (rand < (1.0 / (1 + Math.exp(-velocity.getValue(i))))) {
+                this.position.setValue(i, 1);
+            } else {
+                this.position.setValue(i, 0);
+            }
+        }
     }
 
     /** Gets the weight of the knapsack encoded by a position vector */
-    private int getWeight(Vector position) {
+    public static int getWeight(Vector position) {
         int sum = 0;
         for (int i = 0; i < position.size(); i++) {
             // knapsack[i] is either 1 or 0 depending on whether the item is in the knapsack
@@ -72,12 +80,12 @@ public class Particle {
      * Returns true if the weight of the knapsack is less than or equal to the
      * maximum capacity, else returns false
      */
-    private boolean isValid(Vector position) {
+    public static boolean isValid(Vector position) {
         return getWeight(position) <= ProblemConfiguration.instance.maximumCapacity;
     }
 
     /** Gets the value of the knapsack */
-    private int getValue(Vector position) {
+    public static int getValue(Vector position) {
         int sum = 0;
         for (int i = 0; i < position.size(); i++) {
             // knapsack[i] is either 1 or 0 depending on whether the item is in the knapsack
@@ -92,7 +100,7 @@ public class Particle {
      * Generates a random knapsack by randomly adding items to the knapsack, and
      * stopping just before the knapsack becomes overweight
      */
-    private void setRandomPosition() {
+    public void setRandomPosition() {
         int total_weight = 0;
         // Keep adding items to the knapsack while the current weight is less than the
         // maximum capacity

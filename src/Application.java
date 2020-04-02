@@ -163,12 +163,9 @@ public class Application {
             double c1 = Double.parseDouble(getJSONValueFromLine(scFile.next()));
             double c2 = Double.parseDouble(getJSONValueFromLine(scFile.next()));
 
-            // ParticleSwarmOptimization pso = new ParticleSwarmOptimization(configuration,
-            // numParticles, minVelocity,
-            // maxVelocity, c1, c2, inertia);
-            // return pso.run();
-
-            return -1;
+            ParticleSwarmOptimization pso = new ParticleSwarmOptimization(configuration, numParticles, minVelocity,
+                    maxVelocity, c1, c2, inertia);
+            return pso.run();
         } catch (FileNotFoundException e) {
             System.out.println(e);
             return -1;

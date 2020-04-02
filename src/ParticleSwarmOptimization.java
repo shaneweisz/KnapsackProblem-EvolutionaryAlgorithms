@@ -16,7 +16,7 @@ public class ParticleSwarmOptimization {
 
     // Best values
     private Vector bestPosition;
-    private double globalBestEvaluationValue;
+    private int globalBestEvaluationValue;
 
     /**
      * Parametrized constructor for a ParticleSwarmOptimization instance with
@@ -46,7 +46,64 @@ public class ParticleSwarmOptimization {
      * parameters
      */
     public int run() {
-        return -1;
+        // To be used for statistics for report
+        long startTime = System.currentTimeMillis();
+        int maxIterations = ProblemConfiguration.instance.maximumNumberOfIterations;
+        int[] bweights = new int[maxIterations];
+        int[] bvalues = new int[maxIterations];
+        String[] knapsacks = new String[maxIterations];
+
+        // The initial swarm of particles
+        Particle[] particles = initialize();
+
+        bweights[0] = Particle.getWeight(bestPosition);
+        bvalues[0] = globalBestEvaluationValue;
+        knapsacks[0] = bestPosition.toString();
+
+        int previousGlobalBestEvaluationValue = globalBestEvaluationValue;
+        System.out.println("Running...");
+        System.out.println("Global best evaluation (iteration " + 0 + "):\t" + globalBestEvaluationValue);
+
+        for (int i = 0; i < ProblemConfiguration.instance.maximumNumberOfIterations; i++) {
+            if (globalBestEvaluationValue > previousGlobalBestEvaluationValue) {
+                System.out.println("Global best evaluation (iteration " + (i + 1) + "):\t" + globalBestEvaluationValue);
+                previousGlobalBestEvaluationValue = globalBestEvaluationValue;
+            }
+
+            for (Particle particle : particles) {
+                particle.updateIndividualBestValue();
+                updateGlobalBest(particle);
+            }
+            // System.out.println("Iteration " + i + ":");
+            for (Particle particle : particles) {
+                updateVelocity(particle);
+                particle.updatePosition();
+                // System.out.println("Pos = " + particle.getPosition());
+                // System.out.println("Vel = " + particle.getVelocity());
+            }
+
+            bweights[i] = Particle.getWeight(bestPosition);
+            bvalues[i] = globalBestEvaluationValue;
+            knapsacks[i] = bestPosition.toString();
+        }
+
+        System.out.println();
+        System.out.println("Result:");
+        System.out.println("Global best evaulation " + globalBestEvaluationValue);
+        System.out.println("Best knapsack " + bestPosition);
+
+        // To be used for statistics for report
+        long endTime = System.currentTimeMillis();
+        long runtime = endTime - startTime;
+        String params = String.format(
+                "PSO | #%d | %d particles | minV = %d | maxV = %d | c1 = %.1f | c2 = %.1f | inertia = %.2f",
+                maxIterations, numParticles, minVelocity, maxVelocity, c1, c2, inertia);
+
+        String report = ReportGenerator.generateReport(configuration, params, bweights, bvalues, knapsacks, runtime,
+                maxIterations);
+        ReportGenerator.writeToFile(report, configuration);
+
+        return globalBestEvaluationValue;
     }
 
     private Particle[] initialize() {
@@ -90,7 +147,30 @@ public class ParticleSwarmOptimization {
         gBest.multiply(randomValue02);
         newVelocity.add(gBest);
 
+        // Check the velocities are within the max and min bounds
+        for (int i = 0; i < newVelocity.size(); i++) {
+            if (newVelocity.getValue(i) > maxVelocity) {
+                newVelocity.setValue(i, maxVelocity);
+            }
+            if (newVelocity.getValue(i) < -minVelocity) {
+                newVelocity.setValue(i, -minVelocity);
+            }
+        }
+
         particle.setVelocity(newVelocity);
+    }
+
+    public static void main(String[] args) {
+        String configuration = "test";
+        int numParticles = 100;
+        int minVelocity = 4;
+        int maxVelocity = 4;
+        double c1 = 0.5;
+        double c2 = 0.5;
+        double inertia = 1.0;
+        ParticleSwarmOptimization pso = new ParticleSwarmOptimization(configuration, numParticles, minVelocity,
+                maxVelocity, c1, c2, inertia);
+        pso.run();
     }
 
 }
