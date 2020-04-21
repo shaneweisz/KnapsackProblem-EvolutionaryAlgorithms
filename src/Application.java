@@ -10,9 +10,9 @@ import java.nio.file.Files;
  * configuration or to find the best configuration for a given algorithm
  */
 public class Application {
-    private final static String GA_PATH = "/Users/shaneweisz/Documents/UCT/Honours/Evolutionary Computing/Assignment/configurations/json_configuration_ga_default/";
-    private final static String SA_PATH = "/Users/shaneweisz/Documents/UCT/Honours/Evolutionary Computing/Assignment/configurations/json_configuration_sa_default/";
-    private final static String PSO_PATH = "/Users/shaneweisz/Documents/UCT/Honours/Evolutionary Computing/Assignment/configurations/json_configuration_pso_default/";
+    private final static String GA_PATH = "configurations/json_configuration_ga_default/";
+    private final static String SA_PATH = "configurations/json_configuration_sa_default/";
+    private final static String PSO_PATH = "configurations/json_configuration_pso_default/";
     private final static int NUM_GA_CONFIGS = 28;
     private final static int NUM_SA_CONFIGS = 25;
     private final static int NUM_PSO_CONFIGS = 25;
