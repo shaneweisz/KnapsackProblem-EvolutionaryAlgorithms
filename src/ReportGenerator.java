@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  */
 public class ReportGenerator {
     private final static int BEST_KNOWN_OPTIMUM = 997;
-    private final static String REPORTS_PATH = "/Users/shaneweisz/Documents/UCT/Honours/Evolutionary Computing/Assignment/reports/";
+    private final static String REPORTS_PATH = "reports/";
 
     /**
      * Creates a report `report_[algorithm]_yyyymmdd.txt` based on inputted
@@ -114,12 +114,51 @@ public class ReportGenerator {
     }
 
     /**
-     * Returns a line of the report corresponding to the longest sequence with low
-     * improvement. e.g. Pleateau | Longest sequence 443-472 with improvement less
-     * average 3%.
+     * Returns a line of the report corresponding to the longest sequence without
+     * improvement. e.g. Pleateau | Longest sequence without improvement: 443-472
      */
     private static String addPlateauRow(int[] bvalues) {
-        return "Pleateau | TO DO\n";
+        int longestPlateauStart = 0;
+        int longestPlateauEnd = 0;
+        int longestPlateauLength = 0;
+
+        int currentPlateauStart = 0;
+        int currentPlateauEnd = 0;
+
+        int currentValue = bvalues[0];
+
+        for (int i = 0; i < bvalues.length; i++) {
+            if (bvalues[i] == currentValue) {
+                // if the value has not increased, increment the current plateau length by one
+                currentPlateauEnd++;
+            } else {
+                // if the value has increased, end the current plateau and check if longer than
+                // current longest plateau
+                currentPlateauEnd--;
+                int currentPlateauLength = currentPlateauEnd - currentPlateauStart;
+                if (currentPlateauLength > longestPlateauLength) {
+                    longestPlateauStart = currentPlateauStart;
+                    longestPlateauEnd = currentPlateauEnd;
+                    longestPlateauLength = currentPlateauLength;
+                }
+                // Restart current plateau
+                currentPlateauStart = i;
+                currentPlateauEnd = i;
+                currentValue = bvalues[i];
+            }
+        }
+        // Lastly, check if the unfinished current plateau is longer than any previous
+        // one
+        int currentPlateauLength = currentPlateauEnd - currentPlateauStart;
+        if (currentPlateauLength > longestPlateauLength) {
+            longestPlateauStart = currentPlateauStart;
+            longestPlateauEnd = currentPlateauEnd;
+            longestPlateauLength = currentPlateauLength;
+        }
+
+        // Add one to the values to start indexing at 1, not 0
+        return String.format("Pleateau | Longest sequence without improvement: %d-%d", longestPlateauStart + 1,
+                longestPlateauEnd + 1);
     }
 
     /**

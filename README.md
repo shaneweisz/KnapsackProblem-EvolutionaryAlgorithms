@@ -3,8 +3,13 @@
 ## Abbreviations we will use
 
 * GA = Genetic Algorithm
-* SA = Simulated Annealing
+* SA = Simulated Annealing 
 * PSO = Particle Swarm Optimization
+
+## Please note the following:
+
+* The SA algorithm is ended either when the temperature reaches a minimum of 1 (as specified in class),
+  or when 10 000 iterations are reached, whichever comes first.
 
 ## Running the command-line application
 
