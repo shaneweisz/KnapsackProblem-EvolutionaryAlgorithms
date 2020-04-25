@@ -31,7 +31,7 @@ public class SimulatedAnnealing {
     public int run() {
         // To be used for statistics for report
         long startTime = System.currentTimeMillis();
-        int maxIterations = ProblemConfiguration.instance.maximumNumberOfIterations;
+        int maxIterations = 1000000;
         int[] bweights = new int[maxIterations];
         int[] bvalues = new int[maxIterations];
         String[] knapsacks = new String[maxIterations];
@@ -52,8 +52,7 @@ public class SimulatedAnnealing {
         int numIterations = 1; // To keep track of the number of iterations
 
         // Stop the loop if the temperature is below the specified minimum
-        // or the max number of iterations has been hit
-        while (temperature > MIN_TEMP && numIterations < maxIterations) {
+        while (temperature > MIN_TEMP) {
             // Generate a random neighbor solution by flipping a random bit
             int[] neighbor = generateNeighbor(knapsack);
 
@@ -74,9 +73,9 @@ public class SimulatedAnnealing {
                 // getValue(knapsack)));
             }
 
-            // Have 1000 iterations at each temperature
-            if (numIterations % 1000 == 0) {
-                temperature *= (1 - coolingRate);
+            // Have 10000 iterations at each temperature
+            if (numIterations % 10000 == 0) {
+                temperature *= coolingRate;
             }
 
             bweights[numIterations] = getWeight(bestKnapsack);
@@ -85,6 +84,7 @@ public class SimulatedAnnealing {
 
             numIterations += 1;
         }
+        numIterations -= 1; // We stopped before conducting that last iteration
 
         // To be used for statistics for report
         long endTime = System.currentTimeMillis();

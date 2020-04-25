@@ -37,36 +37,39 @@ public class ReportGenerator {
 
         report += "Configuration:\t" + configuration + ".json\n";
 
-        report += "\t\t" + params + "\n";
+        report += "\t" + params + "\n";
 
         report += addEqualsSigns();
 
-        report += "#\tbweight\tbvalue\tsquality\tknapsack\n";
+        report += String.format("%-9s%6s%8s%13s   %s\n", "#", "bweight", "bvalue", "squality", "knapsack");
 
         report += addDashes();
 
-        report += 1 + "\t\t" + bweights[0] + "\t" + bvalues[0] + " \t" + getSolutionQuality(bvalues[0]) + "\t\t"
-                + knapsacks[0] + "\n";
+        report += String.format("%-9d%6d%8d%13s   %s\n", 1, bweights[0], bvalues[0], getSolutionQuality(bvalues[0]),
+                knapsacks[0]);
 
         report += "...\n";
 
-        report += numIterations + "\t" + bweights[numIterations - 1] + "\t" + bvalues[numIterations - 1] + " \t"
-                + getSolutionQuality(bvalues[numIterations - 1]) + "\t\t" + knapsacks[numIterations - 1] + "\n";
+        report += String.format("%-9d%6d%8d%13s   %s\n", numIterations, bweights[numIterations - 1],
+                bvalues[numIterations - 1], getSolutionQuality(bvalues[numIterations - 1]),
+                knapsacks[numIterations - 1]);
 
         report += addDashes();
 
         report += "[Statistics]\n";
 
-        report += "Runtime\t\t" + runtime + " ms\n\n";
+        report += "Runtime:\t" + runtime + " ms\n\n";
 
-        report += "Convergence\t#\t\tbweight\tbvalue\tsquality\n";
+        report += String.format("%-10s%9s%10s%8s%13s\n", "Convergence", "#  ", "bweight", "bvalue", "squality");
 
         // Print convergence statistics at 25%, 50%, 75% and 100% of iterations
         int intervalSize = numIterations / 4;
         for (int i = 1; i <= 4; i++) {
             int index = intervalSize * i - 1;
-            report += "\t\t\t" + (index + 1) + " \t" + bweights[index] + "\t\t" + bvalues[index] + " \t"
-                    + getSolutionQuality(bvalues[index]) + "\n";
+
+            report += String.format("%-10s%9d%10d%8d%13s\n", "", (index + 1), bweights[index], bvalues[index],
+                    getSolutionQuality(bvalues[index]));
+
         }
 
         report += "\n";
