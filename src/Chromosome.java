@@ -293,9 +293,6 @@ public class Chromosome implements Comparable<Chromosome> {
                 index2 = ProblemConfiguration.instance.randomGenerator.nextInt(this.gene.length);
             } while (index2 == index1); // Ensure the two chosen indices are not the same
 
-            // System.out.println("TEST: " + newGene[index2] + " inserted after " +
-            // newGene[index1]);
-
             // We will insert the item at index2 directly after the item at index1
 
             // If index1 is less than index2, since we are moving the item at index2 to the
@@ -332,6 +329,9 @@ public class Chromosome implements Comparable<Chromosome> {
                 // Note, the item at index2 now immediately follows the item at index1
             }
 
+            // System.out.println("TEST: " + newGene[index2] + " inserted after " +
+            // newGene[index1]);
+
             return new Chromosome(newGene);
         }
         // Select two random items in the chromosome, take the items between these two
@@ -352,6 +352,7 @@ public class Chromosome implements Comparable<Chromosome> {
             do {
                 index2 = ProblemConfiguration.instance.randomGenerator.nextInt(this.gene.length);
             } while (index2 == index1); // Ensure the two chosen indices are not the same
+
             // Ensure index1 < index2
             if (index2 < index1) {
                 int temp = index1;

@@ -2,7 +2,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 /**
- * Class for a population of chromosomes that evolves as part of the genetic
+ * Class for a population of chromosomes that evolve as part of the genetic
  * algorithm.
  */
 public class Population {
@@ -151,7 +151,7 @@ public class Population {
                 return population[i];
             }
         }
-        // if we get here, the selection point must be one - so pick the last member of
+        // if we get here, the selection point must be 1 - so pick the last member of
         // the population
         return population[population.length - 1];
     }
@@ -188,13 +188,14 @@ public class Population {
                     best = contender;
                 }
             }
-            // Add the winner of the tournament as one of the parent
+            // Add the winner of the tournament as one of the parents
             parentArray[i] = population[best];
         }
 
         return parentArray;
     }
 
+    /** Returns a formatted string with each chromosome in the population */
     public String toString() {
         String s = "";
         for (int i = 0; i < population.length; i++) {

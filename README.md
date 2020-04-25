@@ -1,15 +1,24 @@
 # Explanation of Knapsack Solver Application
 
+-------------------------------------------------------------------------------------------------------
 ## Abbreviations we will use
 
 * GA = Genetic Algorithm
 * SA = Simulated Annealing 
 * PSO = Particle Swarm Optimization
 
+-------------------------------------------------------------------------------------------------------
+
 ## Please note the following:
 
+* The GA algorithm at the moment uses a population size of 1024, and takes around 2 minutes to run 
+  through all 28 configurations when searching for the best configuration (generally achieving
+  solution qualities in the 110% range). This population size can be adjusted in the Genetic ALgorithm
+  class depending on whether speed or higher solution quality is prioritized.
 * The SA algorithm is ended either when the temperature reaches a minimum of 1 (as specified in class),
-  or when 10 000 iterations are reached, whichever comes first.
+  or when 10 000 iterations are reached, whichever comes first. 
+
+-------------------------------------------------------------------------------------------------------
 
 ## Running the command-line application
 
@@ -19,17 +28,17 @@
 
 GA:
 
-> java -cp bin Application -configuration ga_[name]
+> java -cp bin Application -configuration ga_[name].json
 
 SA: 
 
-> java -cp bin Application -configuration sa_[name]
+> java -cp bin Application -configuration sa_[name].json
 
 PSO
 
-> java -cp bin Application -configuration pso_[name]
+> java -cp bin Application -configuration pso_[name].json
 
-<em> Note: [name] in these commands should be appropriately replaced, e.g. by 'default_01' or 'best' if the below best search has already been performed </em>
+<em> Note: [name] in these commands should be appropriately replaced, e.g. by 'default_01' (or 'best' if the below best search has already been performed) </em>
 
 ### Searching for the best configuration for a particular algorithm
 
@@ -44,6 +53,8 @@ SA:
 PSO
 
 > java -cp bin Application -search_best_configuration ga
+
+-------------------------------------------------------------------------------------------------------
 
 ## Classes pertaining to each application:
 
@@ -75,11 +86,13 @@ PSO
 * <em>Chromosome</em> – 
     Defines a chromosome that will form part of the population in the genetic
     algorithm. Each chromosome encodes a given knapsack configuration - i.e.
-    which items are chosen for the knapsack and which are not.
+    which items are chosen for the knapsack and which are not.  This is where 
+    the Crossover and Mutation operations are defined.
 
 * <em>Population</em> – 
     Class for the population of chromosomes that evolves as part of the genetic
-    algorithm.
+    algorithm. This is where Roulette-Wheel Selection and Tournament Selection 
+    are defined.
 
 * <em>GeneticAlgorithm</em> – 
     Used for running a genetic algorithm solution to the knapsack problem,
@@ -107,6 +120,6 @@ PSO
     problem, given the specified parameters such as number of particles, maximum
     velocity etc.
 
-
+-------------------------------------------------------------------------------------------------------
 
    

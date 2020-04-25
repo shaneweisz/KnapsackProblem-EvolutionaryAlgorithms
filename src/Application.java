@@ -21,7 +21,7 @@ public class Application {
         if (args[0].equalsIgnoreCase("-configuration")) {
             // Extract the desired configuration to run
             // Options include: ga_default_01, ..., ga_best, etc.
-            String configuration = args[1];
+            String configuration = args[1].substring(0, args[1].indexOf(".json"));
             runAlgorithm(configuration);
 
         } else if (args[0].equals("-search_best_configuration")) {
