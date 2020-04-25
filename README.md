@@ -13,7 +13,7 @@
 
 * The GA algorithm at the moment uses a population size of 1024, and takes around 2 minutes to run 
   through all 28 configurations when searching for the best configuration (generally achieving
-  solution qualities in the 110% range). This population size can be adjusted in the Genetic ALgorithm
+  solution qualities in the 110% range). This population size can be adjusted in the Genetic Algorithm
   class depending on whether speed or higher solution quality is prioritized.
 * The SA algorithm is ended either when the temperature reaches a minimum of 1 (as specified in class),
   or when 10 000 iterations are reached, whichever comes first. 
@@ -48,11 +48,11 @@ GA:
 
 SA: 
 
-> java -cp bin Application -search_best_configuration ga
+> java -cp bin Application -search_best_configuration sa
 
 PSO
 
-> java -cp bin Application -search_best_configuration ga
+> java -cp bin Application -search_best_configuration pso
 
 -------------------------------------------------------------------------------------------------------
 

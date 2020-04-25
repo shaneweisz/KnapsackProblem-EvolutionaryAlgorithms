@@ -16,7 +16,7 @@ public class SimulatedAnnealing {
      * 
      * @param configuration      e.g. "sa_default_01"
      * @param initialTemperature e.g. 10000
-     * @param coolingRate        e.g 0.5
+     * @param coolingRate        e.g. 0.5
      */
     public SimulatedAnnealing(String configuration, int initialTemperature, double coolingRate) {
         this.configuration = configuration;
@@ -52,7 +52,7 @@ public class SimulatedAnnealing {
         int numIterations = 1; // To keep track of the number of iterations
 
         // Stop the loop if the temperature is below the specified minimum
-        // or the max number of generations has been hit
+        // or the max number of iterations has been hit
         while (temperature > MIN_TEMP && numIterations < maxIterations) {
             // Generate a random neighbor solution by flipping a random bit
             int[] neighbor = generateNeighbor(knapsack);
@@ -212,8 +212,8 @@ public class SimulatedAnnealing {
     /** Used for testing purposes */
     public static void main(String[] args) {
         String configuration = "sa_default_01";
-        int temp = 10000;
-        double coolingRate = 0.5;
+        int temp = 100000;
+        double coolingRate = 0.01;
         SimulatedAnnealing sa = new SimulatedAnnealing(configuration, temp, coolingRate);
         sa.run();
     }

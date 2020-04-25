@@ -60,17 +60,17 @@ public class ParticleSwarmOptimization {
         bvalues[0] = globalBestEvaluationValue;
         knapsacks[0] = bestPosition.toString();
 
-        int previousGlobalBestEvaluationValue = globalBestEvaluationValue;
+        // int previousGlobalBestEvaluationValue = globalBestEvaluationValue;
         // System.out.println("Running...");
         // System.out.println("Global best evaluation (iteration " + 0 + "):\t" +
         // globalBestEvaluationValue);
 
         for (int i = 0; i < ProblemConfiguration.instance.maximumNumberOfIterations; i++) {
-            if (globalBestEvaluationValue > previousGlobalBestEvaluationValue) {
-                // System.out.println("Global best evaluation (iteration " + (i + 1) + "):\t" +
-                // globalBestEvaluationValue);
-                previousGlobalBestEvaluationValue = globalBestEvaluationValue;
-            }
+            // if (globalBestEvaluationValue > previousGlobalBestEvaluationValue) {
+            // System.out.println("Global best evaluation (iteration " + (i + 1) + "):\t" +
+            // globalBestEvaluationValue);
+            // previousGlobalBestEvaluationValue = globalBestEvaluationValue;
+            // }
 
             for (Particle particle : particles) {
                 particle.updateIndividualBestValue();
