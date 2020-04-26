@@ -146,20 +146,25 @@ public class ParticleSwarmOptimization {
         Vector gBest = bestPosition.clone();
         Vector position = particle.getPosition();
 
-        double randomValue01 = ProblemConfiguration.instance.randomGenerator.nextDouble();
-        double randomValue02 = ProblemConfiguration.instance.randomGenerator.nextDouble();
-
         Vector newVelocity = oldVelocity.clone();
         newVelocity.multiply(inertia);
 
         pBest.subtract(position);
         pBest.multiply(c1);
-        pBest.multiply(randomValue01);
+        // Multiply each dimension of the vector by a random double
+        for (int i = 0; i < pBest.size(); i++) {
+            double randomValue01 = ProblemConfiguration.instance.randomGenerator.nextDouble();
+            pBest.setValue(i, pBest.getValue(i) * randomValue01);
+        }
         newVelocity.add(pBest);
 
         gBest.subtract(position);
         gBest.multiply(c2);
-        gBest.multiply(randomValue02);
+        // Multiply each dimension of the vector by a random double
+        for (int i = 0; i < gBest.size(); i++) {
+            double randomValue02 = ProblemConfiguration.instance.randomGenerator.nextDouble();
+            gBest.setValue(i, gBest.getValue(i) * randomValue02);
+        }
         newVelocity.add(gBest);
 
         // Check the velocities are within the max and min bounds
