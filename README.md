@@ -9,18 +9,6 @@
 
 -------------------------------------------------------------------------------------------------------
 
-## Please note the following:
-
-* As specified by Carsten in class, the SA algorithm stops when a minimum temperature of 1 is 
-  reached, not after 10 000 iterations. Additionally, as encouraged by research, we remain at each
-  temperature for a set number of iterations (10 000) before cooling, in order to improve results.
-* The GA algorithm at the moment uses a population size of 1024, and takes around 2 minutes to run 
-  through all 28 configurations when searching for the best configuration (generally achieving
-  solution qualities in the 110% range). This population size can be adjusted in the Genetic Algorithm
-  class depending on whether speed or higher solution quality is prioritized.
-
--------------------------------------------------------------------------------------------------------
-
 ## Running the command-line application
 
 <em> Note: the commands should be run from the base folder (the folder containing src, bin, configurations and data as subfolders) </em>
@@ -121,6 +109,18 @@ PSO
     problem, given the specified parameters such as number of particles, maximum
     velocity etc.
 
+-------------------------------------------------------------------------------------------------------
+
+## Please note the following:
+
+* The SA algorithm stops when a minimum temperature of 1 is reached, not after 10 000 iterations. 
+  Additionally, as encouraged by research, we remain at each temperature for a set number of iterations
+  (10 000) before cooling, in order to improve results.
+* The GA algorithm at the moment uses a population size of 1024, and takes around 2 minutes to run 
+  through all 28 configurations when searching for the best configuration (generally achieving
+  solution qualities in the 110% range). This population size can be adjusted in the Genetic Algorithm
+  class depending on whether speed or higher solution quality is prioritized.
+  
 -------------------------------------------------------------------------------------------------------
 
    
